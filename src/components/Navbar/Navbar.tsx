@@ -1,0 +1,87 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRef, useState, MouseEvent, TouchEvent } from "react";
+import styles from "./Navbar.module.css";
+
+const Navbar = () => {
+  const pathname = usePathname();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e: MouseEvent) => {
+    setIsDragging(true);
+    if (scrollRef.current) {
+      setStartX(e.pageX - scrollRef.current.offsetLeft);
+      setScrollLeft(scrollRef.current.scrollLeft);
+    }
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    if (scrollRef.current) {
+      const x = e.pageX - scrollRef.current.offsetLeft;
+      const walk = (x - startX) * 2;
+      scrollRef.current.scrollLeft = scrollLeft - walk;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <nav className={styles.navbar}>
+      <div
+        ref={scrollRef}
+        className={styles.links}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        <Link
+          href="/dashboard"
+          className={pathname === "/dashboard" ? styles.active : ""}
+        >
+          Dashboard
+        </Link>
+        <Link
+          href="/incomes"
+          className={pathname === "/incomes" ? styles.active : ""}
+        >
+          Incomes
+        </Link>
+        <Link
+          href="/expenses"
+          className={pathname === "/expenses" ? styles.active : ""}
+        >
+          Expenses
+        </Link>
+        <Link
+          href="/categories"
+          className={pathname === "/categories" ? styles.active : ""}
+        >
+          Categories
+        </Link>
+        <Link
+          href="/recurring"
+          className={pathname === "/recurring" ? styles.active : ""}
+        >
+          Recurring
+        </Link>
+        <Link
+          href="/user-profile"
+          className={pathname === "/user-profile" ? styles.active : ""}
+        >
+          User Profile
+        </Link>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
