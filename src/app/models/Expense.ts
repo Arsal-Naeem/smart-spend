@@ -1,17 +1,21 @@
 import { Schema, model, models } from 'mongoose';
 
 interface IExpense {
+  userId: string;
   amount: number;
   category: string;
   date: Date;
   description?: string;
+  isRecurring?: boolean;
 }
 
 const expenseSchema = new Schema<IExpense>({
-  amount: { type: Number },
-  category: { type: String },
+  userId: { type: String, required: true },
+  amount: { type: Number, required: true },
+  category: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  description: String
+  description: String,
+  isRecurring: Boolean
 });
 
 export default models.Expense || model<IExpense>('Expense', expenseSchema);
