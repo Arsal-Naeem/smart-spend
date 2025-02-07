@@ -1,10 +1,19 @@
+@import "./styles/antd.css";
+
 :root {
   --color-accent: #cdf345;
-  --card-background: rgb(30, 30, 31);
+  --card-background: #1e1e1f;
   --color-background: #121212;
   --color-text: #f6f2e9;
   --color-dark: #021300;
+  --border-color: #333333;
+  --shadow-1: -4px 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 16px 30px rgba(0, 0, 0, 0.125);
 }
+
+/* :root {
+  color-scheme: dark;
+} */
 
 * {
   margin: 0;
@@ -75,3 +84,5 @@ img {
     padding-bottom: 4.5rem;
   }
 }
+
+

@@ -1,0 +1,100 @@
+/* ANTD STYLYING */
+
+.ant-card {
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  background: linear-gradient(to bottom right, #404040, #40404000 50%);
+  box-shadow: var(--shadow-1);
+  z-index: 1;
+}
+
+.ant-card::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  left: 1px;
+  background: var(--card-background);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.ant-card-head {
+  background-color: #40404081 !important;
+  border-bottom: 1px solid #404040 !important;
+}
+
+.ant-modal-header {
+  background: none !important;
+  margin-bottom: 24px !important;
+}
+
+.ant-modal-title {
+  font-size: 18px !important;
+  background-color: none !important;
+}
+
+.ant-modal-wrap {
+  background-color: #00000050;
+  backdrop-filter: blur(5px);
+}
+
+.ant-modal-content {
+  background-color: #40404081 !important;
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-1);
+}
+
+.ant-statistic-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8c8c8c !important;
+}
+
+.ant-statistic-content {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: var(--font-poppins);
+}
+
+.ant-statistic-content-prefix {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+/* Form Styling */
+.ant-segmented-group {
+}
+
+.ant-segmented-item-selected {
+  color: var(--color-background) !important;
+  background-color: var(--color-accent) !important;
+}
+
+.ant-select-arrow {
+  color: #fff !important;
+}
+
+.ant-picker-suffix {
+  color: #fff !important;
+}
+
+@media screen and (max-width: 580px) {
+  .ant-statistic-title {
+    font-size: 0.8rem;
+  }
+
+  .ant-statistic-content {
+    font-size: 1.2rem;
+  }
+
+  .ant-statistic-content-prefix {
+    font-size: 1rem;
+    margin-right: 4px;
+  }
+}

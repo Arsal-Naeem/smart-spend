@@ -1,0 +1,14 @@
+.floatingButton {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+@media screen and (max-width: 768px) {
+  .floatingButton {
+    bottom: unset;
+    top: 1rem;
+    right: 1rem;
+  }
+}
