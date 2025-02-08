@@ -14,19 +14,54 @@ import {
   TimePicker,
   Space,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./TransactionModal.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-const TransactionModal = () => {
+interface TransactionModalProps {
+  isEdit?: boolean;
+  record?: {
+    key: string;
+    date: string;
+    type: "Income" | "Expense";
+    title: string;
+    amount: number;
+    category: string;
+    notes?: string;
+  };
+  onClose?: () => void;
+}
+
+const TransactionModal: React.FC<TransactionModalProps> = ({
+  isEdit = false,
+  record,
+  onClose,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("expense");
   const [form] = Form.useForm();
   const { message } = App.useApp();
+
+  useEffect(() => {
+    if (isEdit && record) {
+      const datetime = dayjs(record.date);
+      const normalizedType = record.type.toLowerCase() as "income" | "expense";
+      form.setFieldsValue({
+        type: normalizedType,
+        title: record.title,
+        amount: record.amount,
+        date: datetime,
+        time: datetime,
+        category: record.category,
+        notes: record.notes,
+      });
+      setTransactionType(normalizedType);
+    }
+  }, [isEdit, record, form, isModalOpen]);
 
   const showModal = () => setIsModalOpen(true);
   const handleCancel = () => {
@@ -62,9 +97,7 @@ const TransactionModal = () => {
 
   const handleTypeChange = (value: string) => {
     setTransactionType(value);
-    if (value === "income") {
-      form.setFieldValue("category", undefined);
-    }
+
   };
 
   const categories = [
@@ -77,17 +110,26 @@ const TransactionModal = () => {
 
   return (
     <>
-      <div className={styles.floatingButton}>
+      {isEdit ? (
         <Button
-          type="primary"
-          icon={<PlusOutlined style={{ color: "#121212" }} />}
+          type="text"
+          icon={<EditOutlined style={{ color: "#fff", fontSize: "18px" }} />}
           onClick={showModal}
-          shape="circle"
-          size="large"
         />
-      </div>
+      ) : (
+        <div className={styles.floatingButton}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined style={{ color: "#121212" }} />}
+            onClick={showModal}
+            shape="circle"
+            size="large"
+          />
+        </div>
+      )}
+
       <Modal
-        title="Add Transaction"
+        title={isEdit ? "Edit Transaction" : "Add Transaction"}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -101,6 +143,7 @@ const TransactionModal = () => {
                 { label: "Income", value: "income" },
               ]}
               onChange={handleTypeChange}
+              value={transactionType}
               block
             />
           </Form.Item>

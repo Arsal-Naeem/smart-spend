@@ -10,6 +10,8 @@ interface TransactionData {
   type: "Income" | "Expense";
   title: string;
   amount: number;
+  category: string;
+  notes?: string;
 }
 
 interface DeleteTransactionButtonProps {

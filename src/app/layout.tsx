@@ -60,6 +60,15 @@ export default function RootLayout({
                 headerBg: "#2F2F2F",
                 headerColor: "#ffffff",
               },
+              Segmented: {
+                itemSelectedBg: "#cdf345",
+                borderRadius: 12,
+                borderRadiusLG: 12,
+                borderRadiusSM: 12,
+                borderRadiusXS: 12,
+                itemSelectedColor: "rgba(0,0,0,0.88)",
+                itemColor: "rgba(255,255,255,0.65)"
+              },
               Button: {
                 primaryColor: "#000",
                 textTextColor: "#000",

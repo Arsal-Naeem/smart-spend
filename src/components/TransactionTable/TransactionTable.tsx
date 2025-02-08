@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "./TransactionTable.module.css";
 import DeleteTransactionButton from "../Delete TransactionModal/DeleteTransactionModal";
+import TransactionModal from "../TransactionModal/TransactionModal";
 
 dayjs.extend(customParseFormat);
 
@@ -21,6 +22,8 @@ interface TransactionData {
   type: "Income" | "Expense";
   title: string;
   amount: number;
+  category: string;
+  notes?: string;
 }
 
 const TransactionsTable = () => {
@@ -85,12 +88,8 @@ const TransactionsTable = () => {
       align: "center",
       render: (_, record) => (
         <div>
-          <Button
-            type="text"
-            icon={<EditOutlined style={{ color: "#fff", fontSize: "18px" }} />}
-            onClick={() => handleEdit(record)}
-          />
-         <DeleteTransactionButton record={record} onDelete={handleDelete} />
+          <TransactionModal isEdit record={record} />
+          <DeleteTransactionButton record={record} onDelete={handleDelete} />
         </div>
       ),
     },
@@ -111,6 +110,8 @@ const TransactionsTable = () => {
       type: "Income",
       title: "Salary",
       amount: 5000.0,
+      category: "Employment",
+      notes: "Monthly salary payment",
     },
     {
       key: "2",
@@ -118,6 +119,8 @@ const TransactionsTable = () => {
       type: "Expense",
       title: "Groceries",
       amount: 150.5,
+      category: "Food & Supplies",
+      notes: "Weekly grocery shopping at Walmart",
     },
     {
       key: "3",
@@ -125,6 +128,8 @@ const TransactionsTable = () => {
       type: "Expense",
       title: "Internet Bill",
       amount: 79.99,
+      category: "Utilities",
+      notes: "Monthly internet subscription",
     },
     {
       key: "4",
@@ -132,6 +137,8 @@ const TransactionsTable = () => {
       type: "Income",
       title: "Freelance Work",
       amount: 1200.0,
+      category: "Side Business",
+      notes: "Website development project",
     },
     {
       key: "5",
@@ -139,6 +146,8 @@ const TransactionsTable = () => {
       type: "Expense",
       title: "Restaurant",
       amount: 45.75,
+      category: "Dining Out",
+      notes: "Dinner with family",
     },
   ];
 
