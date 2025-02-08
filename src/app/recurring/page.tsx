@@ -1,9 +1,9 @@
+import MainLayout from "@/components/MainLayout/MainLayout";
+
 export default function Recurring() {
   return (
-    <>
-      <div>
-        <p>Recurring</p>
-      </div>
-    </>
+    <MainLayout>
+      <p>Recurring</p>
+    </MainLayout>
   );
 }

@@ -1,9 +1,9 @@
+import MainLayout from "@/components/MainLayout/MainLayout";
+
 export default function Categories() {
   return (
-    <>
-      <div>
-        <p>Categories</p>
-      </div>
-    </>
+    <MainLayout>
+      <p>Categories</p>
+    </MainLayout>
   );
 }

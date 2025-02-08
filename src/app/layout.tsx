@@ -67,7 +67,7 @@ export default function RootLayout({
                 borderRadiusSM: 12,
                 borderRadiusXS: 12,
                 itemSelectedColor: "rgba(0,0,0,0.88)",
-                itemColor: "rgba(255,255,255,0.65)"
+                itemColor: "rgba(255,255,255,0.65)",
               },
               Button: {
                 primaryColor: "#000",
@@ -78,8 +78,7 @@ export default function RootLayout({
             algorithm: theme.darkAlgorithm,
           }}
         >
-          <Navbar />
-          <main className="main">{children}</main>
+          {children}
         </ConfigProvider>
       </body>
     </html>
