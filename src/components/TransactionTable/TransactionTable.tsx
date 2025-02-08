@@ -11,6 +11,7 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "./TransactionTable.module.css";
+import DeleteTransactionButton from "../Delete TransactionModal/DeleteTransactionModal";
 
 dayjs.extend(customParseFormat);
 
@@ -89,12 +90,7 @@ const TransactionsTable = () => {
             icon={<EditOutlined style={{ color: "#fff", fontSize: "18px" }} />}
             onClick={() => handleEdit(record)}
           />
-          <Button
-            type="text"
-            danger
-            icon={<DeleteOutlined style={{ fontSize: "18px" }} />}
-            onClick={() => handleDelete(record)}
-          />
+         <DeleteTransactionButton record={record} onDelete={handleDelete} />
         </div>
       ),
     },
