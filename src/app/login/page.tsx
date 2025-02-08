@@ -4,7 +4,7 @@ import { Button, Card, Typography, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import styles from "./login.module.css";
-import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 
 const { Title, Text } = Typography;
 
@@ -14,7 +14,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
       console.error("Google Sign-In failed:", error);
     } finally {
