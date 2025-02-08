@@ -97,19 +97,21 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="$" style={{ width: "100%" }} />
+            <InputNumber prefix="$" style={{ width: "100%" }} min={0} />
           </Form.Item>
 
           <Form.Item>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: 8 }}
-              >
-                Add Category
-              </Button>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                justifyContent: "flex-end",
+              }}
+            >
               <Button onClick={handleCancel}>Cancel</Button>
+              <Button type="primary" htmlType="submit">
+                Save
+              </Button>
             </div>
           </Form.Item>
         </Form>

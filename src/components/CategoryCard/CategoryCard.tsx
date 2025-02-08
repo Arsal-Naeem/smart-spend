@@ -7,7 +7,6 @@ interface CategoryCardProps {
   totalSpend: number;
   budget: number;
   transactionCount: number;
-  onSubmit: (values: { categoryName: string; budget: number }) => void;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
@@ -15,7 +14,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   totalSpend,
   budget,
   transactionCount,
-  onSubmit,
 }) => {
   const spendPercentage = (totalSpend / budget) * 100;
 
@@ -29,7 +27,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <CategoryModal
           isEdit
           initialValues={{ categoryName: categoryName, budget: budget }}
-          onSubmit={onSubmit}
         />
       }
     >

@@ -177,7 +177,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="$" style={{ width: "100%" }} />
+            <InputNumber prefix="$" style={{ width: "100%" }} min={0}/>
           </Form.Item>
 
           {transactionType === "expense" && (
