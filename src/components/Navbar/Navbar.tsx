@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState, MouseEvent } from "react";
+import { useSession, signOut } from "next-auth/react";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -31,6 +33,10 @@ const Navbar = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/' });
   };
 
   return (
@@ -73,6 +79,18 @@ const Navbar = () => {
         >
           User Profile
         </Link>
+        {session && (
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSignOut();
+            }}
+            className={styles.signOutLink}
+          >
+            Sign Out
+          </a>
+        )}
       </div>
     </nav>
   );
