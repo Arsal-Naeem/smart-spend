@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef, useState, MouseEvent, TouchEvent } from "react";
+import { useRef, useState, MouseEvent } from "react";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {

@@ -1,9 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Segmented, Button, Space, Tag } from "antd";
+import { Table, Segmented, Tag } from "antd";
 import {
-  EditOutlined,
-  DeleteOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
 } from "@ant-design/icons";
@@ -94,10 +92,6 @@ const TransactionsTable = () => {
       ),
     },
   ];
-
-  const handleEdit = (record: TransactionData) => {
-    console.log("Edit:", record);
-  };
 
   const handleDelete = (record: TransactionData) => {
     console.log("Delete:", record);

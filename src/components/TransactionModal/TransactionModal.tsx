@@ -4,12 +4,10 @@ import {
   Modal,
   Form,
   Input,
-  Switch,
   DatePicker,
   InputNumber,
   Select,
   App,
-  Tooltip,
   Segmented,
   TimePicker,
   Space,
@@ -39,7 +37,6 @@ interface TransactionModalProps {
 const TransactionModal: React.FC<TransactionModalProps> = ({
   isEdit = false,
   record,
-  onClose,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("expense");
@@ -97,7 +94,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
   const handleTypeChange = (value: string) => {
     setTransactionType(value);
-
   };
 
   const categories = [
