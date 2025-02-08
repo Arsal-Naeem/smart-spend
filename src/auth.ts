@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Google from "next-auth/providers/google";
-import { User as AppUser, IUser } from "@/app/models/User";
+import User from "@/app/models/User";
 import dbConnect from "@/app/lib/dbConnect";
 
 // Extend the default User type
@@ -8,12 +8,10 @@ declare module "next-auth" {
   interface Session {
     user: {
       userId: string;
+      name?: string;
+      email?: string;
     } & DefaultSession["user"];
   }
-
-  // interface User extends DefaultUser {
-  //   userId: string;
-  // }
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -32,10 +30,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async signIn({ user, account, profile }) {
       await dbConnect();
 
-      const existingUser = await AppUser.findOne({ userId: profile?.sub });
+      const existingUser = await User.findOne({ userId: profile?.sub });
 
       if (!existingUser) {
-        await AppUser.create({
+        await User.create({
           userId: profile?.sub,
           name: profile?.name,
           email: profile?.email,
