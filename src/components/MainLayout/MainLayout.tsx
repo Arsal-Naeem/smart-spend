@@ -9,14 +9,19 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-const router = useRouter();
-const { data: session, status } = useSession();
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
-      useEffect(() => {
-        if (status !== 'authenticated') {
-          router.push('api/auth/signin');
-        }
-      }, [status, router]);
+  useEffect(() => {
+    if (status !== "authenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading" || status !== "authenticated") {
+    return null;
+  }
+
   return (
     <>
       <Navbar />
