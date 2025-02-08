@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ConfigProvider, theme } from "antd";
 import { Poppins } from "next/font/google";
 import "@ant-design/v5-patch-for-react-19";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
-
-import Navbar from "@/components/Navbar/Navbar";
+import { auth } from "@/auth";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -17,11 +17,12 @@ export const metadata: Metadata = {
   description: "Track your expenses and incomes with ease.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en">
       <body className={poppins.variable}>
@@ -78,7 +79,7 @@ export default function RootLayout({
             algorithm: theme.darkAlgorithm,
           }}
         >
-          {children}
+          <SessionProvider session={session}>{children}</SessionProvider>
         </ConfigProvider>
       </body>
     </html>
