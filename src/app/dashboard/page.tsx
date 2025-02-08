@@ -2,6 +2,7 @@ import CategoryBreakdown from "@/components/Dashboard/CategoryBreakdown/Category
 import MonthlyBalanceTrend from "@/components/Dashboard/MonthlyBalanceTrend/MonthlyBalanceTrend";
 import Stats from "@/components/Dashboard/Stats/Stats";
 import TransactionModal from "@/components/TransactionModal/TransactionModal";
+import TransactionsTable from "@/components/TransactionTable/TransactionTable";
 import { Col, Row } from "antd";
 
 export default function Dashboard() {
@@ -53,7 +54,9 @@ export default function Dashboard() {
           </Col>
         </Row>
       </div>
+      <TransactionsTable />
       <TransactionModal />
+      
     </>
   );
 }

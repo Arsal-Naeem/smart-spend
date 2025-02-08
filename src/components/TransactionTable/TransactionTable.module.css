@@ -1,0 +1,18 @@
+.typeTag {
+  padding: "4px 10px 4px 8px" !important;
+  border-radius: 100px;
+}
+
+.typeText {
+  display: inline;
+}
+
+@media (max-width: 580px) {
+  .typeTag {
+    padding: "4px 5px 4px 5px" !important;
+    border-radius: 100px;
+  }
+  .typeText {
+    font-size: 8px;
+  }
+}

@@ -57,7 +57,8 @@ img {
 }
 
 .main {
-  padding-top: 4.5rem;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
 }
 
 ::-webkit-scrollbar {
@@ -81,7 +82,7 @@ img {
 @media screen and (max-width: 768px) {
   .main {
     padding-top: 0rem;
-    padding-bottom: 4.5rem;
+    padding-bottom: 5rem;
   }
 }
 

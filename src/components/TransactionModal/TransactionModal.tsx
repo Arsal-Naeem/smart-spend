@@ -78,15 +78,13 @@ const TransactionModal = () => {
   return (
     <>
       <div className={styles.floatingButton}>
-        <Tooltip title="Add Transaction">
-          <Button
-            type="primary"
-            icon={<PlusOutlined style={{ color: "#121212" }} />}
-            onClick={showModal}
-            shape="circle"
-            size="large"
-          />
-        </Tooltip>
+        <Button
+          type="primary"
+          icon={<PlusOutlined style={{ color: "#121212" }} />}
+          onClick={showModal}
+          shape="circle"
+          size="large"
+        />
       </div>
       <Modal
         title="Add Transaction"
@@ -103,6 +101,7 @@ const TransactionModal = () => {
                 { label: "Income", value: "income" },
               ]}
               onChange={handleTypeChange}
+              block
             />
           </Form.Item>
 

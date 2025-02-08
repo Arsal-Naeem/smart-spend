@@ -68,7 +68,14 @@
 }
 
 /* Form Styling */
-.ant-segmented-group {
+.ant-segmented {
+  background-color: #1e1e1f;
+  color: #fff;
+  border-radius: 12px;
+}
+
+.ant-segmented-item {
+  border-radius: 12px !important;
 }
 
 .ant-segmented-item-selected {

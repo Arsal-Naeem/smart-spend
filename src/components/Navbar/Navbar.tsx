@@ -50,16 +50,10 @@ const Navbar = () => {
           Dashboard
         </Link>
         <Link
-          href="/incomes"
-          className={pathname === "/incomes" ? styles.active : ""}
+          href="/transactions"
+          className={pathname === "/transactions" ? styles.active : ""}
         >
-          Incomes
-        </Link>
-        <Link
-          href="/expenses"
-          className={pathname === "/expenses" ? styles.active : ""}
-        >
-          Expenses
+          Transactions
         </Link>
         <Link
           href="/categories"

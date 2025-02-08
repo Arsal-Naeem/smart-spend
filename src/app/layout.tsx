@@ -56,7 +56,10 @@ export default function RootLayout({
                 colorIcon: "#fff",
                 activeBg: "#2e2d2d",
               },
-      
+              Table: {
+                headerBg: "#2F2F2F",
+                headerColor: "#ffffff",
+              },
               Button: {
                 primaryColor: "#000",
                 textTextColor: "#000",
