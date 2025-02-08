@@ -1,12 +1,8 @@
 "use client";
 import { Row, Col, Card } from "antd";
-import {
-  WalletOutlined,
-  RiseOutlined,
-  FallOutlined,
-  BankOutlined,
-} from "@ant-design/icons";
+import { WalletOutlined, RiseOutlined, FallOutlined, BankOutlined } from "@ant-design/icons";
 import CountUp from "react-countup";
+import { useEffect, useState } from "react";
 
 interface StatsProps {
   currentBalance: number;
@@ -19,7 +15,7 @@ const Stats: React.FC<StatsProps> = ({
   currentBalance,
   monthlyIncome,
   monthlyExpenses,
-  budgetUtilization,
+  budgetUtilization
 }) => {
   return (
     <div style={{ padding: "0 16px", marginBottom: "8px" }}>

@@ -1,7 +1,9 @@
 import { Schema, model, models } from 'mongoose';
 
 export interface ITransaction {
+    _id?: string;
     userId: string;
+    title: string;
     type: "income" | "expense";
     amount: number;
     date: string;
@@ -11,6 +13,7 @@ export interface ITransaction {
 
 const transactionSchema = new Schema<ITransaction>({
     userId: { type: String, required: true },
+    title: { type: String, required: true },
     type: { type: String, required: true },
     amount: { type: Number, required: true },
     date: { type: String, required: true },

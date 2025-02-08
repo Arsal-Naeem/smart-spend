@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -17,13 +17,25 @@ type MonthlyBalanceData = {
   balance: number;
 };
 
-type MonthlyBalanceTrendProps = {
-  data: MonthlyBalanceData[];
-};
+// interface MonthlyBalanceTrendProps {
+//   data: MonthlyBalanceData[];
+// }
 
-const MonthlyBalanceTrend: React.FC<MonthlyBalanceTrendProps> = ({ data }) => {
+const MonthlyBalanceTrend: React.FC = () => {
+  const [data, setData] = useState<MonthlyBalanceData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/analytics/monthly-balance')
+      .then(res => res.json())
+      .then(data => {
+        setData(data);
+        setLoading(false);
+      });
+  }, []);
+
   return (
-    <Card title="Monthly Balance Trend" bordered={false}>
+    <Card title="Monthly Balance Trend" bordered={false} loading={loading}>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={data}

@@ -7,15 +7,15 @@ import TransactionsTable from "@/components/TransactionTable/TransactionTable";
 import { Col, Row } from "antd";
 
 export default function Dashboard() {
-  const data = [
-    { month: "June", balance: 100 },
-    { month: "Jul", balance: 2200 },
-    { month: "Aug", balance: 3000 },
-    { month: "Sep", balance: 2800 },
-    { month: "Oct", balance: 3500 },
-    { month: "Nov", balance: 4000 },
-    { month: "Dec", balance: 4500 },
-  ];
+  // const data = [
+  //   { month: "June", balance: 100 },
+  //   { month: "Jul", balance: 2200 },
+  //   { month: "Aug", balance: 3000 },
+  //   { month: "Sep", balance: 2800 },
+  //   { month: "Oct", balance: 3500 },
+  //   { month: "Nov", balance: 4000 },
+  //   { month: "Dec", balance: 4500 },
+  // ];
 
   const categoryData = [
     { category: "Groceries", amount: 500, color: "#a2f345" },
@@ -48,7 +48,7 @@ export default function Dashboard() {
       <div style={{ padding: "0 16px" }}>
         <Row gutter={[8, 8]}>
           <Col xs={24} sm={12} lg={12}>
-            <MonthlyBalanceTrend data={data} />
+            <MonthlyBalanceTrend />
           </Col>
           <Col xs={24} sm={12} lg={12}>
             <CategoryBreakdown data={categoryData} />
