@@ -9,6 +9,10 @@
   z-index: 1;
 }
 
+.ant-tooltip-inner {
+  color: #fff !important;
+}
+
 .ant-card::before {
   content: "";
   position: absolute;

@@ -61,6 +61,16 @@
   background-color: var(--color-accent);
 }
 
+.disabledLink {
+  color: rgba(0, 0, 0, 0.45);
+  cursor: not-allowed;
+  text-decoration: none;
+  color: var(--color-text);
+  padding: 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
 @media screen and (max-width: 768px) {
   .navbar {
     top: auto;
