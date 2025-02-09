@@ -19,15 +19,32 @@ type MonthlyBalanceData = {
 
 const MonthlyBalanceTrend: React.FC = () => {
   const [data, setData] = useState<MonthlyBalanceData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(true);
 
   useEffect(() => {
-    fetch("/api/analytics/monthly-balance")
-      .then((res) => res.json())
-      .then((data) => {
+    setShouldAnimate(false);
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/analytics/monthly-balance");
+        const data = await response.json();
         setData(data);
         setLoading(false);
-      });
+        setShouldAnimate(true);
+      } catch (error) {
+        console.error("Failed to fetch monthly balance data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      setLoading(true);
+      setShouldAnimate(false);
+    };
   }, []);
 
   return (
@@ -87,7 +104,8 @@ const MonthlyBalanceTrend: React.FC = () => {
             strokeWidth={3}
             dot={{ r: 4, fill: "#6366F1" }}
             activeDot={{ r: 6, fill: "#6366F1" }}
-            animationDuration={1500}
+            animationDuration={shouldAnimate ? 1500 : 0}
+            animationBegin={0}
             fill="url(#balanceGradient)"
           />
         </LineChart>
