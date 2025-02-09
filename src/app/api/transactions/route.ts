@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import dbConnect from '@/app/lib/dbConnect';
 import Transaction from '@/app/models/Transaction';
+import Category from '@/app/models/Category';
 
 export async function GET() {
   try {
@@ -34,8 +35,24 @@ export async function POST(request: Request) {
     const body = await request.json();
     const transaction = await Transaction.create({
       ...body,
-      userId: session.user.userId // Ensure userId is set from the session
+      userId: session.user.userId
     });
+
+    // Update category if transaction is an expense
+    if (transaction.type === 'expense' && transaction.category) {
+      await Category.findOneAndUpdate(
+        { 
+          userId: session.user.userId,
+          categoryName: transaction.category 
+        },
+        { 
+          $inc: { 
+            totalSpend: transaction.amount,
+            transactionCount: 1
+          } 
+        }
+      );
+    }
 
     return NextResponse.json(transaction, { status: 201 });
   } catch (error) {
@@ -56,17 +73,60 @@ export async function PUT(request: Request) {
     }
 
     const { _id, ...updateData } = await request.json();
-    const transaction = await Transaction.findOneAndUpdate(
+    
+    // Get the original transaction
+    const originalTransaction = await Transaction.findOne({ 
+      _id, 
+      userId: session.user.userId 
+    });
+
+    if (!originalTransaction) {
+      return NextResponse.json({ error: 'Transaction not found' }, { status: 404 });
+    }
+
+    // Update the transaction
+    const updatedTransaction = await Transaction.findOneAndUpdate(
       { _id, userId: session.user.userId },
       updateData,
       { new: true }
     );
 
-    if (!transaction) {
-      return NextResponse.json({ error: 'Transaction not found' }, { status: 404 });
+    // Handle category updates for expenses
+    if (originalTransaction.type === 'expense') {
+      // Decrement original category
+      if (originalTransaction.category) {
+        await Category.findOneAndUpdate(
+          {
+            userId: session.user.userId,
+            categoryName: originalTransaction.category
+          },
+          {
+            $inc: {
+              totalSpend: -originalTransaction.amount,
+              transactionCount: -1
+            }
+          }
+        );
+      }
+
+      // Increment new category
+      if (updatedTransaction.type === 'expense' && updatedTransaction.category) {
+        await Category.findOneAndUpdate(
+          {
+            userId: session.user.userId,
+            categoryName: updatedTransaction.category
+          },
+          {
+            $inc: {
+              totalSpend: updatedTransaction.amount,
+              transactionCount: 1
+            }
+          }
+        );
+      }
     }
 
-    return NextResponse.json(transaction);
+    return NextResponse.json(updatedTransaction);
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to update transaction' }, 
@@ -91,7 +151,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Transaction ID required' }, { status: 400 });
     }
 
-    const transaction = await Transaction.findOneAndDelete({
+    // Get the transaction before deleting
+    const transaction = await Transaction.findOne({
       _id: id,
       userId: session.user.userId
     });
@@ -99,6 +160,25 @@ export async function DELETE(request: Request) {
     if (!transaction) {
       return NextResponse.json({ error: 'Transaction not found' }, { status: 404 });
     }
+
+    // Update category if it's an expense transaction
+    if (transaction.type === 'expense' && transaction.category) {
+      await Category.findOneAndUpdate(
+        {
+          userId: session.user.userId,
+          categoryName: transaction.category
+        },
+        {
+          $inc: {
+            totalSpend: -transaction.amount,
+            transactionCount: -1
+          }
+        }
+      );
+    }
+
+    // Delete the transaction
+    await Transaction.deleteOne({ _id: id, userId: session.user.userId });
 
     return NextResponse.json({ message: 'Transaction deleted successfully' });
   } catch (error) {
