@@ -34,6 +34,12 @@ interface TransactionModalProps {
   onClose?: () => void;
 }
 
+// Add interface for category data
+interface CategoryOption {
+  value: string;
+  label: string;
+}
+
 const TransactionModal: React.FC<TransactionModalProps> = ({
   isEdit = false,
   record,
@@ -44,6 +50,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { message } = App.useApp();
+  const [categories, setCategories] = useState<CategoryOption[]>([]);
 
   useEffect(() => {
     if (isEdit && record) {
@@ -61,6 +68,34 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       setTransactionType(normalizedType);
     }
   }, [isEdit, record, form, isModalOpen]);
+
+  // Add useEffect to fetch categories when modal opens
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/category");
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const data = await response.json();
+        
+        // Transform the category data into the format needed for Select
+        const categoryOptions = data.map((cat: any) => ({
+          value: cat.category,
+          label: cat.category
+        }));
+        
+        setCategories(categoryOptions);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        message.error("Failed to load categories");
+      }
+    };
+
+    if (isModalOpen) {
+      fetchCategories();
+    }
+  }, [isModalOpen, message]);
 
   const showModal = () => setIsModalOpen(true);
   const handleCancel = () => {
@@ -148,14 +183,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setTransactionType(value);
   };
 
-  const categories = [
-    { value: "food", label: "Food" },
-    { value: "transport", label: "Transport" },
-    { value: "utilities", label: "Utilities" },
-    { value: "entertainment", label: "Entertainment" },
-    { value: "salary", label: "Salary" },
-  ];
-
   return (
     <>
       {isEdit ? (
@@ -238,7 +265,11 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               name="category"
               rules={[{ required: true, message: "Please select category" }]}
             >
-              <Select options={categories} placeholder="Select Category" />
+              <Select 
+                options={categories} 
+                placeholder="Select Category"
+                loading={categories.length === 0}
+              />
             </Form.Item>
           )}
 

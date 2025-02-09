@@ -50,6 +50,11 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     setIsModalOpen(false);
   };
 
+  const capitalizeString = (str: string): string => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+  };
+
   const handleSubmit = async (values: {
     categoryName: string;
     budget: number;
@@ -62,6 +67,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
 
       const formattedValues = {
         ...values,
+        categoryName: capitalizeString(values.categoryName),
         color:
           typeof values.color === "string"
             ? values.color

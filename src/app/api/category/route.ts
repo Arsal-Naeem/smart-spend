@@ -20,7 +20,7 @@ export async function GET() {
       amount: category.totalSpend,
       color: category.color,
       totalSpend: category.totalSpend,
-      TransactionCount: category.transactionCount,
+      transactionCount: category.transactionCount,
       budget: category.budget
     }))
     return NextResponse.json(categoryData);
