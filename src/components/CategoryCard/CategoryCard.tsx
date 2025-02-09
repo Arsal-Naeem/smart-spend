@@ -1,42 +1,64 @@
-import { Card, Progress, Space, Button } from "antd"
+import { Card, Progress, Space, Button } from "antd";
 import CategoryModal from "../Modals/CategoryModal/CategoryModal";
+import DeleteCategoryButton from "../Modals/DeleteCategoryModal/DeleteCategoryModal";
 
 interface CategoryCardProps {
-  categoryName: string;
+  id: string;
+  category: string;
   totalSpend: number;
   budget: number;
   transactionCount: number;
   color: string;
+  onSuccess?: () => void;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
-  categoryName,
+  id,
+  category,
   totalSpend,
   budget,
   transactionCount,
   color,
+  onSuccess,
 }) => {
   const spendPercentage = (totalSpend / budget) * 100;
 
   return (
     <Card
-      title={categoryName}
+      title={category}
       hoverable
       style={{ width: 300 }}
       bordered={false}
       extra={
-        <CategoryModal
-          isEdit
-          initialValues={{ categoryName: categoryName, budget: budget, color: color }}
-        />
+        <Space>
+          <CategoryModal
+            isEdit
+            initialValues={{
+              categoryName: category,
+              budget: budget,
+              color: color,
+              _id: id,
+            }}
+            onSuccess={onSuccess}
+          />
+          <DeleteCategoryButton
+            category={{
+              _id: id,
+              categoryName: category,
+              budget: budget,
+              color: color,
+            }}
+            onClose={onSuccess}
+          />
+        </Space>
       }
     >
       <Space
         direction="vertical"
         style={{ width: "100%", marginBottom: "1rem" }}
       >
-        <p>Total Spend: ${totalSpend.toFixed(2)}</p>
-        <p>Budget: ${budget.toFixed(2)}</p>
+        <p>Total Spend: ${totalSpend?.toFixed(2) || 0}</p>
+        <p>Budget: ${budget?.toFixed(2) || 0}</p>
         <Progress
           percent={parseFloat(spendPercentage.toFixed(2))}
           status={spendPercentage >= 100 ? "exception" : "normal"}
@@ -45,7 +67,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
             "100%": spendPercentage >= 100 ? "#D64040" : color,
           }}
         />
-        <p>Transactions: {transactionCount}</p>
+        <p>Transactions: {transactionCount || 0}</p>
       </Space>
     </Card>
   );

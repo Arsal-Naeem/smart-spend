@@ -1,49 +1,49 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoryCard from "../CategoryCard/CategoryCard";
 import CategoryModal from "../Modals/CategoryModal/CategoryModal";
-import { Card, Skeleton } from "antd";
+import { Card, message, Skeleton } from "antd";
 
-// Dummy data for categories
-const categories = [
-  {
-    categoryName: "Shopping",
-    totalSpend: 450.75,
-    budget: 600,
-    color: "#ff9d00",
-    transactionCount: 8,
-  },
-  {
-    categoryName: "Housing",
-    totalSpend: 1200,
-    budget: 1500,
-    color: "#00ff22",
-    transactionCount: 2,
-  },
-  {
-    categoryName: "Transportation",
-    totalSpend: 250.5,
-    budget: 300,
-    color: "#0063f9",
-    transactionCount: 5,
-  },
-  {
-    categoryName: "Healthcare",
-    totalSpend: 500,
-    budget: 400,
-    color: "#f5e1c0",
-    transactionCount: 3,
-  },
-];
+interface Category {
+  _id: string;
+  category: string;
+  totalSpend: number;
+  budget: number;
+  color: string;
+  transactionCount: number;
+}
 
 const CategoryGrid = () => {
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/category");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      message.error("Failed to fetch categories");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const LoadingSkeleton = () => (
     <Card style={{ width: 300 }} bordered={false}>
       <Skeleton active paragraph={{ rows: 5 }} />
     </Card>
   );
+
   return (
     <div
       style={{
@@ -69,14 +69,16 @@ const CategoryGrid = () => {
           {categories.map((category, index) => (
             <CategoryCard
               key={index}
-              categoryName={category.categoryName}
+              id={category._id}
+              category={category.category}
               totalSpend={category.totalSpend}
               budget={category.budget}
               transactionCount={category.transactionCount}
               color={category.color}
+              onSuccess={fetchCategories}
             />
           ))}
-          <CategoryModal />
+          <CategoryModal onSuccess={fetchCategories} />
         </>
       )}
     </div>

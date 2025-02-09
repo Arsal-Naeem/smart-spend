@@ -8,27 +8,30 @@ import {
   Button,
   InputNumber,
   ColorPicker,
+  message,
 } from "antd";
 import { useEffect, useState } from "react";
 
 interface CategoryModalProps {
   isEdit?: boolean;
   initialValues?: {
+    _id?: string;
     categoryName: string;
     budget: number;
     color: string;
   };
-
   onClick?: () => void;
+  onSuccess?: () => void;
 }
 
 const CategoryModal: React.FC<CategoryModalProps> = ({
   isEdit = false,
   initialValues,
-
   onClick,
+  onSuccess,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -47,15 +50,52 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     setIsModalOpen(false);
   };
 
-  const handleSubmit = (values: {
+  const handleSubmit = async (values: {
     categoryName: string;
     budget: number;
-    color: string;
+    color: string | { toHexString: () => string };
   }) => {
-    console.log("Submitted values:", values);
-    // Add your category creation logic here
-    form.resetFields();
-    setIsModalOpen(false);
+    try {
+      setLoading(true);
+      const url = "/api/category";
+      const method = isEdit ? "PUT" : "POST";
+
+      const formattedValues = {
+        ...values,
+        color:
+          typeof values.color === "string"
+            ? values.color
+            : values.color.toHexString(),
+      };
+
+      const body = isEdit
+        ? { ...formattedValues, _id: initialValues?._id }
+        : formattedValues;
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save category");
+      }
+
+      message.success(
+        `Category ${isEdit ? "updated" : "created"} successfully`
+      );
+      form.resetFields();
+      setIsModalOpen(false);
+      onSuccess?.();
+    } catch (error) {
+      console.error("Error saving category:", error);
+      message.error("Failed to save category");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,7 +125,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       )}
 
       <Modal
-        title="Add New Category"
+        title={isEdit ? "Edit Category" : "Add New Category"}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -128,7 +168,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
               }}
             >
               <Button onClick={handleCancel}>Cancel</Button>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={loading}>
                 Save
               </Button>
             </div>

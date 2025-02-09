@@ -15,9 +15,13 @@ export async function GET() {
 
     const categories = await Category.find({ userId: session.user.userId });
     const categoryData = categories.map(category => ({
+      _id: category._id,
       category: category.categoryName,
       amount: category.totalSpend,
-      color: category.color
+      color: category.color,
+      totalSpend: category.totalSpend,
+      TransactionCount: category.transactionCount,
+      budget: category.budget
     }))
     return NextResponse.json(categoryData);
   } catch (error) {
