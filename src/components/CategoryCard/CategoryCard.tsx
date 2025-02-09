@@ -1,5 +1,4 @@
-import { Card, Progress, Space, Button } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { Card, Progress, Space, Button } from "antd"
 import CategoryModal from "../Modals/CategoryModal/CategoryModal";
 
 interface CategoryCardProps {
@@ -7,6 +6,7 @@ interface CategoryCardProps {
   totalSpend: number;
   budget: number;
   transactionCount: number;
+  color: string;
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({
@@ -14,6 +14,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   totalSpend,
   budget,
   transactionCount,
+  color,
 }) => {
   const spendPercentage = (totalSpend / budget) * 100;
 
@@ -26,7 +27,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       extra={
         <CategoryModal
           isEdit
-          initialValues={{ categoryName: categoryName, budget: budget }}
+          initialValues={{ categoryName: categoryName, budget: budget, color: color }}
         />
       }
     >
@@ -40,8 +41,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           percent={parseFloat(spendPercentage.toFixed(2))}
           status={spendPercentage >= 100 ? "exception" : "normal"}
           strokeColor={{
-            "0%": "#F5E1C0",
-            "100%": spendPercentage >= 100 ? "#D64040" : "#cdf345",
+            "0%": color,
+            "100%": spendPercentage >= 100 ? "#D64040" : color,
           }}
         />
         <p>Transactions: {transactionCount}</p>

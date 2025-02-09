@@ -1,12 +1,15 @@
+'use client'
 import CategoryBreakdown from "@/components/Dashboard/CategoryBreakdown/CategoryBreakdown";
 import MonthlyBalanceTrend from "@/components/Dashboard/MonthlyBalanceTrend/MonthlyBalanceTrend";
 import Stats from "@/components/Dashboard/Stats/Stats";
 import MainLayout from "@/components/MainLayout/MainLayout";
 import TransactionModal from "@/components/Modals/TransactionModal/TransactionModal";
 import TransactionsTable from "@/components/TransactionTable/TransactionTable";
+import { useSession } from "next-auth/react";
 import { Col, Row } from "antd";
 
 export default function Dashboard() {
+  const { data: session } = useSession();
   const categoryData = [
     { category: "Groceries", amount: 500, color: "#a2f345" },
     { category: "Utilities", amount: 300, color: "#458bf3" },
@@ -27,7 +30,7 @@ export default function Dashboard() {
       <div
         style={{ padding: "24px 16px 8px 16px ", color: "var(--color-accent)" }}
       >
-        <h2>Hi, Arsal Naeem</h2>
+        <h2>Hi, {session?.user?.name || 'Guest'}</h2>
       </div>
       <Stats
         currentBalance={stats?.currentBalance}

@@ -23,7 +23,7 @@ interface TransactionData {
 
 const TransactionsTable = () => {
   const [filter, setFilter] = useState<string | number>("All");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const columns: ColumnsType<TransactionData> = [
     {

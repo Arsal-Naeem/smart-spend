@@ -1,6 +1,14 @@
 "use client";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Card, Modal, Form, Input, Button, InputNumber } from "antd";
+import {
+  Card,
+  Modal,
+  Form,
+  Input,
+  Button,
+  InputNumber,
+  ColorPicker,
+} from "antd";
 import { useEffect, useState } from "react";
 
 interface CategoryModalProps {
@@ -8,6 +16,7 @@ interface CategoryModalProps {
   initialValues?: {
     categoryName: string;
     budget: number;
+    color: string;
   };
 
   onClick?: () => void;
@@ -38,7 +47,11 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     setIsModalOpen(false);
   };
 
-  const handleSubmit = (values: { name: string }) => {
+  const handleSubmit = (values: {
+    categoryName: string;
+    budget: number;
+    color: string;
+  }) => {
     console.log("Submitted values:", values);
     // Add your category creation logic here
     form.resetFields();
@@ -99,7 +112,13 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           >
             <InputNumber prefix="$" style={{ width: "100%" }} min={0} />
           </Form.Item>
-
+          <Form.Item
+            label="Color"
+            name="color"
+            rules={[{ required: true, message: "Please select a color" }]}
+          >
+            <ColorPicker format="hex" />
+          </Form.Item>
           <Form.Item>
             <div
               style={{

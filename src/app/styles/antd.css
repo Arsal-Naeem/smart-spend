@@ -88,6 +88,24 @@
   color: #fff !important;
 }
 
+.ant-progress .ant-progress-inner {
+  background-color: var(--color-background) !important;
+}
+
+.ant-popover-inner {
+  background-color: var(--color-background) !important;
+}
+
+.ant-color-picker-trigger {
+  background: var(--color-background) !important;
+  border: none !important;
+}
+
+.ant-color-picker-trigger
+  .ant-color-picker-color-block
+  .ant-color-picker-color-block-inner {
+  box-shadow: none !important;
+}
 @media screen and (max-width: 580px) {
   .ant-statistic-title {
     font-size: 0.8rem;

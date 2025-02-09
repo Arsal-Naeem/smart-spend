@@ -17,11 +17,12 @@ const Stats: React.FC<StatsProps> = ({
   monthlyExpenses,
   budgetUtilization
 }) => {
+  const [loading, setLoading] = useState(false);
   return (
     <div style={{ padding: "0 16px", marginBottom: "8px" }}>
       <Row gutter={[8, 8]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false}>
+          <Card bordered={false} loading={loading}>
             <div>
               <div
                 style={{
@@ -33,7 +34,7 @@ const Stats: React.FC<StatsProps> = ({
                 Current Balance
               </div>
               <div style={{ color: "#cdf345", fontSize: "24px" }}>
-                <WalletOutlined style={{ marginRight: "5px" }} /> Rs.
+                <WalletOutlined style={{ marginRight: "5px" }} /> $
                 <CountUp end={currentBalance} separator="," duration={1} />
               </div>
             </div>
@@ -41,7 +42,7 @@ const Stats: React.FC<StatsProps> = ({
         </Col>
 
         <Col xs={12} sm={12} lg={6}>
-          <Card bordered={false}>
+          <Card bordered={false} loading={loading}>
             <div>
               <div
                 style={{
@@ -53,7 +54,7 @@ const Stats: React.FC<StatsProps> = ({
                 Income
               </div>
               <div style={{ color: "#45bcf3", fontSize: "24px" }}>
-                <RiseOutlined style={{ marginRight: "5px" }} /> Rs.
+                <RiseOutlined style={{ marginRight: "5px" }} /> $
                 <CountUp end={monthlyIncome} separator="," duration={1} />
               </div>
             </div>
@@ -61,7 +62,7 @@ const Stats: React.FC<StatsProps> = ({
         </Col>
 
         <Col xs={12} sm={12} lg={6}>
-          <Card bordered={false}>
+          <Card bordered={false} loading={loading}>
             <div>
               <div
                 style={{
@@ -73,7 +74,7 @@ const Stats: React.FC<StatsProps> = ({
                 Expenses
               </div>
               <div style={{ color: "#f34545", fontSize: "24px" }}>
-                <FallOutlined style={{ marginRight: "5px" }} /> Rs.
+                <FallOutlined style={{ marginRight: "5px" }} /> $
                 <CountUp end={monthlyExpenses} separator="," duration={1} />
               </div>
             </div>
@@ -81,7 +82,7 @@ const Stats: React.FC<StatsProps> = ({
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false}>
+          <Card bordered={false} loading={loading}>
             <div>
               <div
                 style={{
