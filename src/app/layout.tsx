@@ -39,6 +39,8 @@ export default async function RootLayout({
               colorFillTertiary: "#1e1e1f",
               colorFillQuaternary: "#1e1e1f",
               colorTextLightSolid: "#2e2d2d",
+              fontFamily: "var(--font-poppins)",
+              fontFamilyCode: "var(--font-poppins)",
             },
             components: {
               Input: {
@@ -70,6 +72,13 @@ export default async function RootLayout({
                 borderRadiusXS: 12,
                 itemSelectedColor: "rgba(0,0,0,0.88)",
                 itemColor: "rgba(255,255,255,0.65)",
+              },
+              Message: {
+                contentBg: "#1e1e1f",         
+                colorError: "#f34545",       
+                colorInfo: "#579cfd",      
+                colorText: "#ffffff", 
+                colorSuccess: "#cdf345 61.20%)"    
               },
               Button: {
                 primaryColor: "#000",

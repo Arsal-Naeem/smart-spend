@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { App } from "antd";
 
 export default function MainLayout({
   children,
@@ -24,8 +25,10 @@ export default function MainLayout({
 
   return (
     <>
-      <Navbar />
-      <main className="main">{children}</main>
+      <App>
+        <Navbar />
+        <main className="main">{children}</main>
+      </App>
     </>
   );
 }
