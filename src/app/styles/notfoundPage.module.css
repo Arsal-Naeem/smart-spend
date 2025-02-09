@@ -1,0 +1,78 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  padding: 0px 10px;
+}
+
+.errorCode {
+  font-size: 10rem;
+  line-height: 10rem;
+  font-weight: 700;
+}
+
+.messageHeader {
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.message {
+  font-size: 1rem;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.homeButton {
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .errorCode {
+    font-size: 8rem;
+    line-height: 8rem;
+  }
+
+  .messageHeader {
+    font-size: 1.5rem;
+  }
+
+  .message {
+    font-size: 0.9rem;
+  }
+
+  .homeButton :global(.ant-btn) {
+    font-size: 0.9rem;
+    height: 2.5rem;
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .errorCode {
+    font-size: 6rem;
+    line-height: 6rem;
+  }
+
+  .messageHeader {
+    font-size: 1.2rem;
+  }
+
+  .message {
+    font-size: 0.85rem;
+  }
+
+  .homeButton {
+    margin-top: 1.5rem;
+  }
+  
+  .homeButton :global(.ant-btn) {
+    font-size: 0.85rem;
+    height: 2.2rem;
+    padding: 0 1.2rem;
+  }
+}
