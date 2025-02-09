@@ -5,7 +5,7 @@ import "@ant-design/v5-patch-for-react-19";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { auth } from "@/auth";
-import Loader from "@/components/Loader/Loader";
+import Loader from "@/components/Loaders/FullPageLoader/Loader";
 
 const poppins = Poppins({
   variable: "--font-poppins",

@@ -1,10 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Table, Segmented, Tag } from "antd";
-import {
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-} from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -26,6 +23,7 @@ interface TransactionData {
 
 const TransactionsTable = () => {
   const [filter, setFilter] = useState<string | number>("All");
+  const [loading, setLoading] = useState(true);
 
   const columns: ColumnsType<TransactionData> = [
     {
@@ -165,6 +163,7 @@ const TransactionsTable = () => {
       <Table<TransactionData>
         columns={columns}
         dataSource={dummyData}
+        loading={loading}
         pagination={
           dummyData.length > 10
             ? {
