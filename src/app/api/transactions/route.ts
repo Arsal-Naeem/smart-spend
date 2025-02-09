@@ -4,7 +4,7 @@ import dbConnect from '@/app/lib/dbConnect';
 import Transaction from '@/app/models/Transaction';
 import Category from '@/app/models/Category';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await dbConnect();
     const session = await auth();
@@ -13,7 +13,21 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const transactions = await Transaction.find({ userId: session.user.userId });
+    // Get type from query parameters
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+
+    // Build query object
+    const query: { userId: string; type?: "income" | "expense" } = {
+      userId: session.user.userId
+    };
+
+    // Add type to query if valid
+    if (type && ['income', 'expense'].includes(type)) {
+      query.type = type as "income" | "expense";
+    }
+
+    const transactions = await Transaction.find(query);
     return NextResponse.json(transactions);
   } catch (error) {
     return NextResponse.json(
