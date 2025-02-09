@@ -1,6 +1,6 @@
 import { Card, Progress, Space, Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import CategoryModal from "../CategoryModal/CategoryModal";
+import CategoryModal from "../Modals/CategoryModal/CategoryModal";
 
 interface CategoryCardProps {
   categoryName: string;

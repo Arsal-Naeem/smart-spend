@@ -1,6 +1,6 @@
 import { Row, Col } from "antd";
 import CategoryCard from "../CategoryCard/CategoryCard";
-import CategoryModal from "../CategoryModal/CategoryModal";
+import CategoryModal from "../Modals/CategoryModal/CategoryModal";
 
 // Dummy data for categories
 const categories = [

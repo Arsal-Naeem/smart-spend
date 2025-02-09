@@ -2,21 +2,11 @@ import CategoryBreakdown from "@/components/Dashboard/CategoryBreakdown/Category
 import MonthlyBalanceTrend from "@/components/Dashboard/MonthlyBalanceTrend/MonthlyBalanceTrend";
 import Stats from "@/components/Dashboard/Stats/Stats";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import TransactionModal from "@/components/TransactionModal/TransactionModal";
+import TransactionModal from "@/components/Modals/TransactionModal/TransactionModal";
 import TransactionsTable from "@/components/TransactionTable/TransactionTable";
 import { Col, Row } from "antd";
 
 export default function Dashboard() {
-  // const data = [
-  //   { month: "June", balance: 100 },
-  //   { month: "Jul", balance: 2200 },
-  //   { month: "Aug", balance: 3000 },
-  //   { month: "Sep", balance: 2800 },
-  //   { month: "Oct", balance: 3500 },
-  //   { month: "Nov", balance: 4000 },
-  //   { month: "Dec", balance: 4500 },
-  // ];
-
   const categoryData = [
     { category: "Groceries", amount: 500, color: "#a2f345" },
     { category: "Utilities", amount: 300, color: "#458bf3" },

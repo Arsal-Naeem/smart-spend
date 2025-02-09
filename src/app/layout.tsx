@@ -5,6 +5,7 @@ import "@ant-design/v5-patch-for-react-19";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { auth } from "@/auth";
+import Loader from "@/components/Loader/Loader";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -79,7 +80,10 @@ export default async function RootLayout({
             algorithm: theme.darkAlgorithm,
           }}
         >
-          <SessionProvider session={session}>{children}</SessionProvider>
+          <SessionProvider session={session}>
+            <Loader />
+            {children}
+          </SessionProvider>
         </ConfigProvider>
       </body>
     </html>

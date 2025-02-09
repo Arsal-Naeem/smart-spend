@@ -9,8 +9,8 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "./TransactionTable.module.css";
-import DeleteTransactionButton from "../Delete TransactionModal/DeleteTransactionModal";
-import TransactionModal from "../TransactionModal/TransactionModal";
+import DeleteTransactionButton from "../Modals/DeleteTransactionModal/DeleteTransactionModal";
+import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 
 dayjs.extend(customParseFormat);
 
