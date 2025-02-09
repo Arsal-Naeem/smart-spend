@@ -19,6 +19,7 @@
 }
 
 .links a {
+  font-size: 1rem;
   text-decoration: none;
   color: var(--color-text);
   padding: 0.5rem;
@@ -62,6 +63,7 @@
 }
 
 .disabledLink {
+  font-size: 1rem;
   color: rgba(0, 0, 0, 0.45);
   cursor: not-allowed;
   text-decoration: none;
@@ -101,7 +103,8 @@
     display: none;
   }
 
-  .links a {
+  .links a,
+  .disabledLink {
     font-size: 0.9rem;
     white-space: nowrap;
     touch-action: manipulation;
