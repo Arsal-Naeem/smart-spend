@@ -22,18 +22,19 @@ interface TransactionData {
 }
 
 const TransactionsTable = () => {
-  const [filter, setFilter] = useState<string | number>("All");
+  const [filter, setFilter] = useState<"All" | "Income" | "Expense">("All");
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
   const fetchTransactions = async () => {
     try {
-      setLoading(true);
-      const response = await fetch("/api/transactions");
+      let url = "/api/transactions";
+
+      if (filter !== "All") {
+        url += `?type=${filter.toLowerCase()}`;
+      }
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch transactions");
       }
@@ -44,6 +45,19 @@ const TransactionsTable = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(true);
+      fetchTransactions();
+    }, 1);
+
+    return () => clearTimeout(timer);
+  }, [filter]);
+
+  const handleFilterChange = (value: "All" | "Income" | "Expense") => {
+    setFilter(value);
   };
 
   const columns: ColumnsType<TransactionData> = [
@@ -112,17 +126,12 @@ const TransactionsTable = () => {
           />
           <DeleteTransactionButton
             record={record}
-            onDelete={handleDelete}
             onClose={fetchTransactions}
           />
         </div>
       ),
     },
   ];
-
-  const handleDelete = (record: TransactionData) => {
-    console.log("Delete:", record);
-  };
 
   return (
     <div style={{ padding: 16 }}>
@@ -137,10 +146,11 @@ const TransactionsTable = () => {
       <Segmented
         options={["All", "Income", "Expense"]}
         value={filter}
-        onChange={setFilter}
+        onChange={handleFilterChange}
         style={{ marginBottom: 16 }}
         block
       />
+      <TransactionModal onClose={fetchTransactions}/>
       <Table<TransactionData>
         columns={columns}
         dataSource={transactions}

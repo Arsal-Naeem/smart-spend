@@ -16,14 +16,12 @@ interface TransactionData {
 
 interface DeleteTransactionButtonProps {
   record: TransactionData;
-  onDelete: (record: TransactionData) => void;
   onClose?: () => void;
 }
 
 const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
   record,
-  onDelete,
-  onClose
+  onClose,
 }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,23 +34,22 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
     try {
       setLoading(true);
       const response = await fetch(`/api/transactions?id=${record._id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete transaction');
+        throw new Error("Failed to delete transaction");
       }
 
-      message.success('Transaction deleted successfully');
-      onDelete(record);
+      message.success("Transaction deleted successfully");
       setDeleteModalVisible(false);
-      
+
       if (onClose) {
         onClose();
       }
     } catch (error) {
-      console.error('Error deleting transaction:', error);
-      message.error('Failed to delete transaction');
+      console.error("Error deleting transaction:", error);
+      message.error("Failed to delete transaction");
     } finally {
       setLoading(false);
     }

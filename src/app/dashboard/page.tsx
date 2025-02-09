@@ -49,7 +49,6 @@ export default function Dashboard() {
         </Row>
       </div>
       <TransactionsTable />
-      <TransactionModal />
     </MainLayout>
   );
 }

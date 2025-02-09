@@ -7,10 +7,10 @@ import {
   DatePicker,
   InputNumber,
   Select,
-  App,
   Segmented,
   TimePicker,
   Space,
+  message,
 } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./TransactionModal.module.css";
@@ -34,7 +34,6 @@ interface TransactionModalProps {
   onClose?: () => void;
 }
 
-// Add interface for category data
 interface CategoryOption {
   value: string;
   label: string;
@@ -49,7 +48,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [transactionType, setTransactionType] = useState("expense");
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const { message } = App.useApp();
   const [categories, setCategories] = useState<CategoryOption[]>([]);
 
   useEffect(() => {
@@ -69,7 +67,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     }
   }, [isEdit, record, form, isModalOpen]);
 
-  // Add useEffect to fetch categories when modal opens
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -78,13 +75,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
-        
-        // Transform the category data into the format needed for Select
+
         const categoryOptions = data.map((cat: any) => ({
           value: cat.category,
-          label: cat.category
+          label: cat.category,
         }));
-        
+
         setCategories(categoryOptions);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -143,7 +139,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           throw new Error("Failed to update transaction");
         }
 
-        // message.success("Transaction updated successfully");
+        message.success("Transaction updated successfully");
       } else {
         // Create new transaction
         const response = await fetch("/api/transactions", {
@@ -158,7 +154,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           throw new Error("Failed to create transaction");
         }
 
-        // message.success("Transaction added successfully");
+        message.success("Transaction added successfully");
       }
 
       setIsModalOpen(false);
@@ -171,9 +167,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       }
     } catch (error) {
       console.error("Error creating/updating transaction:", error);
-      // message.error(
-      //   error instanceof Error ? error.message : "An error occurred"
-      // );
+      message.error(
+        error instanceof Error ? error.message : "An error occurred"
+      );
     } finally {
       setLoading(false);
     }
@@ -265,8 +261,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               name="category"
               rules={[{ required: true, message: "Please select category" }]}
             >
-              <Select 
-                options={categories} 
+              <Select
+                options={categories}
                 placeholder="Select Category"
                 loading={categories.length === 0}
               />
