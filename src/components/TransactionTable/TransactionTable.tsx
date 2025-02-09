@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Segmented, Tag } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
@@ -12,9 +12,9 @@ import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 dayjs.extend(customParseFormat);
 
 interface TransactionData {
-  key: string;
+  _id: string;
   date: string;
-  type: "Income" | "Expense";
+  type: "income" | "expense";
   title: string;
   amount: number;
   category: string;
@@ -24,6 +24,27 @@ interface TransactionData {
 const TransactionsTable = () => {
   const [filter, setFilter] = useState<string | number>("All");
   const [loading, setLoading] = useState(false);
+  const [transactions, setTransactions] = useState<TransactionData[]>([]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const fetchTransactions = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/transactions");
+      if (!response.ok) {
+        throw new Error("Failed to fetch transactions");
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const columns: ColumnsType<TransactionData> = [
     {
@@ -39,13 +60,13 @@ const TransactionsTable = () => {
       key: "type",
       align: "center",
       width: 100,
-      render: (type: "Income" | "Expense") => (
+      render: (type: "income" | "expense") => (
         <Tag
-          icon={type === "Income" ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
+          icon={type === "income" ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
           style={{
-            backgroundColor: type === "Income" ? "#cdf345" : "#f34545",
+            backgroundColor: type === "income" ? "#cdf345" : "#f34545",
             color: "#000",
-            border: `1px solid ${type === "Income" ? "#181c08" : "#240a0a"}`,
+            border: `1px solid ${type === "income" ? "#181c08" : "#240a0a"}`,
             padding: "4px 10px 4px 8px",
             borderRadius: 100,
             textTransform: "uppercase",
@@ -84,8 +105,16 @@ const TransactionsTable = () => {
       align: "center",
       render: (_, record) => (
         <div>
-          <TransactionModal isEdit record={record} />
-          <DeleteTransactionButton record={record} onDelete={handleDelete} />
+          <TransactionModal
+            isEdit
+            record={record}
+            onClose={fetchTransactions}
+          />
+          <DeleteTransactionButton
+            record={record}
+            onDelete={handleDelete}
+            onClose={fetchTransactions}
+          />
         </div>
       ),
     },
@@ -94,54 +123,6 @@ const TransactionsTable = () => {
   const handleDelete = (record: TransactionData) => {
     console.log("Delete:", record);
   };
-
-  const dummyData: TransactionData[] = [
-    {
-      key: "1",
-      date: "2025-02-08T12:00:00Z",
-      type: "Income",
-      title: "Salary",
-      amount: 5000.0,
-      category: "Employment",
-      notes: "Monthly salary payment",
-    },
-    {
-      key: "2",
-      date: "2025-02-07T15:30:00Z",
-      type: "Expense",
-      title: "Groceries",
-      amount: 150.5,
-      category: "Food & Supplies",
-      notes: "Weekly grocery shopping at Walmart",
-    },
-    {
-      key: "3",
-      date: "2025-02-06T08:45:00Z",
-      type: "Expense",
-      title: "Internet Bill",
-      amount: 79.99,
-      category: "Utilities",
-      notes: "Monthly internet subscription",
-    },
-    {
-      key: "4",
-      date: "2025-02-05T19:20:00Z",
-      type: "Income",
-      title: "Freelance Work",
-      amount: 1200.0,
-      category: "Side Business",
-      notes: "Website development project",
-    },
-    {
-      key: "5",
-      date: "2025-02-04T21:15:00Z",
-      type: "Expense",
-      title: "Restaurant",
-      amount: 45.75,
-      category: "Dining Out",
-      notes: "Dinner with family",
-    },
-  ];
 
   return (
     <div style={{ padding: 16 }}>
@@ -162,10 +143,10 @@ const TransactionsTable = () => {
       />
       <Table<TransactionData>
         columns={columns}
-        dataSource={dummyData}
+        dataSource={transactions}
         loading={loading}
         pagination={
-          dummyData.length > 10
+          transactions.length > 10
             ? {
                 pageSize: 10,
                 position: ["bottomCenter"],

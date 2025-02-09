@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, message } from "antd"; // Add message from antd
 import { DeleteOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
 interface TransactionData {
-  key: string;
+  _id: string;
   date: string;
-  type: "Income" | "Expense";
+  type: "income" | "expense";
   title: string;
   amount: number;
   category: string;
@@ -17,21 +17,45 @@ interface TransactionData {
 interface DeleteTransactionButtonProps {
   record: TransactionData;
   onDelete: (record: TransactionData) => void;
+  onClose?: () => void;
 }
 
 const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
   record,
   onDelete,
+  onClose
 }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = () => {
     setDeleteModalVisible(true);
   };
 
-  const confirmDelete = () => {
-    onDelete(record);
-    setDeleteModalVisible(false);
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/transactions?id=${record._id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete transaction');
+      }
+
+      message.success('Transaction deleted successfully');
+      onDelete(record);
+      setDeleteModalVisible(false);
+      
+      if (onClose) {
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      message.error('Failed to delete transaction');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,7 +74,7 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
         onCancel={() => setDeleteModalVisible(false)}
         okText="Delete"
         cancelText="Cancel"
-        okButtonProps={{ danger: true }}
+        okButtonProps={{ danger: true, loading: loading }}
         width={400}
         centered
       >

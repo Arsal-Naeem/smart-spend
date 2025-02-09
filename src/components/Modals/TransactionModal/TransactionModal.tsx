@@ -23,9 +23,9 @@ dayjs.extend(utc);
 interface TransactionModalProps {
   isEdit?: boolean;
   record?: {
-    key: string;
+    _id: string;
     date: string;
-    type: "Income" | "Expense";
+    type: "income" | "expense";
     title: string;
     amount: number;
     category: string;
@@ -37,10 +37,12 @@ interface TransactionModalProps {
 const TransactionModal: React.FC<TransactionModalProps> = ({
   isEdit = false,
   record,
+  onClose,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("expense");
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
   const { message } = App.useApp();
 
   useEffect(() => {
@@ -67,29 +69,79 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setTransactionType("expense");
   };
 
-  const handleSubmit = (values: any) => {
-    const combinedDateTime =
-      values.date && values.time
-        ? dayjs(values.date)
-            .hour(values.time.hour())
-            .minute(values.time.minute())
-            .second(0)
-            .millisecond(0)
-            .utc()
-            .toISOString()
-        : null;
+  const handleSubmit = async (values: any) => {
+    setLoading(true);
+    try {
+      const combinedDateTime =
+        values.date && values.time
+          ? dayjs(values.date)
+              .hour(values.time.hour())
+              .minute(values.time.minute())
+              .second(0)
+              .millisecond(0)
+              .utc()
+              .toISOString()
+          : null;
 
-    const formattedValues = {
-      ...values,
-      datetime: combinedDateTime,
-    };
+      const formattedValues = {
+        type: values.type,
+        title: values.title,
+        amount: values.amount,
+        date: combinedDateTime,
+        category: values.category,
+        notes: values.notes,
+      };
 
-    console.log("Form values:", formattedValues);
-    message.success("Transaction added successfully");
-    setIsModalOpen(false);
-    form.resetFields();
-    setTransactionType("expense");
-    message.success("Transaction added successfully");
+      if (isEdit && record) {
+        const response = await fetch(`/api/transactions`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            _id: record._id,
+            ...formattedValues,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update transaction");
+        }
+
+        // message.success("Transaction updated successfully");
+      } else {
+        // Create new transaction
+        const response = await fetch("/api/transactions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formattedValues),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create transaction");
+        }
+
+        // message.success("Transaction added successfully");
+      }
+
+      setIsModalOpen(false);
+      form.resetFields();
+      setTransactionType("expense");
+
+      if (onClose) {
+        onClose();
+        console.log("is it hitting");
+      }
+    } catch (error) {
+      console.error("Error creating/updating transaction:", error);
+      // message.error(
+      //   error instanceof Error ? error.message : "An error occurred"
+      // );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleTypeChange = (value: string) => {
@@ -177,7 +229,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="$" style={{ width: "100%" }} min={0}/>
+            <InputNumber prefix="$" style={{ width: "100%" }} min={0} />
           </Form.Item>
 
           {transactionType === "expense" && (
@@ -198,10 +250,14 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             className="form-buttons"
             style={{ marginBottom: 0, textAlign: "right" }}
           >
-            <Button style={{ marginRight: 8 }} onClick={handleCancel}>
+            <Button
+              style={{ marginRight: 8 }}
+              loading={loading}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" loading={loading} htmlType="submit">
               Save
             </Button>
           </Form.Item>
