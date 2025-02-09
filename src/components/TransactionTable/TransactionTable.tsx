@@ -8,6 +8,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "./TransactionTable.module.css";
 import DeleteTransactionButton from "../Modals/DeleteTransactionModal/DeleteTransactionModal";
 import TransactionModal from "../Modals/TransactionModal/TransactionModal";
+import EmptyState from "../EmptyState/EmptyState";
 
 dayjs.extend(customParseFormat);
 
@@ -155,6 +156,9 @@ const TransactionsTable = () => {
         columns={columns}
         dataSource={transactions}
         loading={loading}
+        locale={{
+          emptyText: <EmptyState description="No transactions found" />
+        }}
         pagination={
           transactions.length > 10
             ? {

@@ -32,6 +32,7 @@ export default async function RootLayout({
             token: {
               colorPrimary: "#cdf345",
               colorText: "#ffffff",
+              colorTextDescription: "#ffffff",
               colorTextPlaceholder: "#8c8c8c",
               colorIcon: "#fff",
               colorBgContainer: "#1e1e1f",

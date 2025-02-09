@@ -17,6 +17,7 @@ import styles from "./TransactionModal.module.css";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import EmptyState from "@/components/EmptyState/EmptyState";
 
 dayjs.extend(utc);
 
@@ -265,6 +266,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 options={categories}
                 placeholder="Select Category"
                 loading={categories.length === 0}
+                notFoundContent={
+                  <EmptyState description="No categories found" />
+                }
               />
             </Form.Item>
           )}
