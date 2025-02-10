@@ -2,6 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 import Google from "next-auth/providers/google";
 import User from "@/app/models/User";
 import dbConnect from "@/app/lib/dbConnect";
+import Category from "./app/models/Category";
 
 // Extend the default User type
 declare module "next-auth" {
@@ -40,6 +41,51 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           email: profile?.email,
           currency: "USD",
         });
+
+        //? Add default categories
+        await Category.create(
+          [
+            {
+              userId: profile?.sub,
+              categoryName: "Shopping",
+              totalSpend: 0,
+              budget: 500,
+              transactionCount: 0,
+              color: "#FF0000",
+            },
+            {
+              userId: profile?.sub,
+              categoryName: "Food",
+              totalSpend: 0,
+              budget: 500,
+              transactionCount: 0,
+              color: "#00FF00",
+            },
+            {
+              userId: profile?.sub,
+              categoryName: "Transportation",
+              totalSpend: 0,
+              budget: 500,
+              transactionCount: 0,
+              color: "#0000FF",
+            },
+            {
+              userId: profile?.sub,
+              categoryName: "Healthcare",
+              totalSpend: 0,
+              budget: 500,
+              transactionCount: 0,
+              color: "#FFFF00",
+            },
+            {
+              userId: profile?.sub,
+              categoryName: "Health",
+              totalSpend: 0,
+              budget: 0,
+              transactionCount: 0,
+              color: "#FF00FF",
+            },
+          ]);
       }
 
       return true;
