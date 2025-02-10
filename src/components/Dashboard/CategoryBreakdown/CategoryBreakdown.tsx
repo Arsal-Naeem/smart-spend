@@ -25,6 +25,7 @@ const CategoryBreakdown: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const response = await fetch("/api/category");
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
@@ -34,7 +35,9 @@ const CategoryBreakdown: React.FC = () => {
       } catch (error) {
         console.error("Error fetching categories:", error);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       }
     };
 

@@ -31,11 +31,13 @@ const MonthlyBalanceTrend: React.FC = () => {
         const response = await fetch("/api/analytics/monthly-balance");
         const data = await response.json();
         setData(data);
-        setLoading(false);
         setShouldAnimate(true);
       } catch (error) {
         console.error("Failed to fetch monthly balance data:", error);
-        setLoading(false);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       }
     };
 

@@ -34,7 +34,9 @@ const CategoryGrid = () => {
       console.error("Error fetching categories:", error);
       message.error("Failed to fetch categories");
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
