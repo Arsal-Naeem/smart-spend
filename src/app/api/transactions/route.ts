@@ -27,7 +27,7 @@ export async function GET(request: Request) {
       query.type = type as "income" | "expense";
     }
 
-    const transactions = await Transaction.find(query);
+    const transactions = await Transaction.find(query).sort({ date: -1 });
     return NextResponse.json(transactions);
   } catch (err) {
     return NextResponse.json(
