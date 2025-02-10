@@ -92,7 +92,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     if (isModalOpen) {
       fetchCategories();
     }
-  }, [isModalOpen, message]);
+  }, [isModalOpen]);
 
   const showModal = () => setIsModalOpen(true);
   const handleCancel = () => {

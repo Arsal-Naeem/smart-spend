@@ -1,4 +1,4 @@
-import { Card, Progress, Space, Button } from "antd";
+import { Card, Progress, Space } from "antd";
 import CategoryModal from "../Modals/CategoryModal/CategoryModal";
 import DeleteCategoryButton from "../Modals/DeleteCategoryModal/DeleteCategoryModal";
 

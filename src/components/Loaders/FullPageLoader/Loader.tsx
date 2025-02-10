@@ -14,7 +14,7 @@ const Loader = () => {
     if (isVisible) {
       localStorage.setItem("hasVisited", "true");
 
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setIsVisible(false);
       }, 2500);
     }

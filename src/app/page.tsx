@@ -1,6 +1,6 @@
 "use client";
 import { Button, Typography, Space } from "antd";
-import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+import { LoginOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "./styles/landingPage.module.css";
 

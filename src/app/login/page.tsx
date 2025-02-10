@@ -1,18 +1,18 @@
 "use client";
 
-import { Button, Card, Typography, Divider } from "antd";
+import { Button, Card, Typography} from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import styles from "./login.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   useEffect(() => {
     if (status === "authenticated") {

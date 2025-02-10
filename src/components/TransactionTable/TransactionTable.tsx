@@ -151,13 +151,13 @@ const TransactionsTable = () => {
         style={{ marginBottom: 16 }}
         block
       />
-      <TransactionModal onClose={fetchTransactions}/>
+      <TransactionModal onClose={fetchTransactions} />
       <Table<TransactionData>
         columns={columns}
         dataSource={transactions}
         loading={loading}
         locale={{
-          emptyText: <EmptyState description="No transactions found" />
+          emptyText: <EmptyState description="No transactions found" />,
         }}
         pagination={
           transactions.length > 10

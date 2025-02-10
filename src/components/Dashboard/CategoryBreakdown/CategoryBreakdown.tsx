@@ -1,5 +1,5 @@
 "use client";
-import { Card, Spin } from "antd";
+import { Card } from "antd";
 import {
   PieChart,
   Pie,
