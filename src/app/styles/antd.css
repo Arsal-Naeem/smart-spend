@@ -72,6 +72,11 @@
   font-size: 1.2rem;
 }
 
+.ant-btn-color-primary,
+.ant-btn-color-dangerous {
+  box-shadow: none;
+}
+
 /* Form Styling */
 .ant-segmented {
   background-color: #1e1e1f;

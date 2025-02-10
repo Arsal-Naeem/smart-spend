@@ -51,7 +51,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               totalSpend: 0,
               budget: 500,
               transactionCount: 0,
-              color: "#FF0000",
+              color: "#E5FF70",
             },
             {
               userId: profile?.sub,
@@ -59,7 +59,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               totalSpend: 0,
               budget: 500,
               transactionCount: 0,
-              color: "#00FF00",
+              color: "#70cbff",
             },
             {
               userId: profile?.sub,
@@ -67,7 +67,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               totalSpend: 0,
               budget: 500,
               transactionCount: 0,
-              color: "#0000FF",
+              color: "#ffd470",
             },
             {
               userId: profile?.sub,
@@ -75,7 +75,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               totalSpend: 0,
               budget: 500,
               transactionCount: 0,
-              color: "#FFFF00",
+              color: "#ff8170",
             },
             {
               userId: profile?.sub,

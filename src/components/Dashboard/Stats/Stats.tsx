@@ -50,7 +50,7 @@ const Stats: React.FC = () => {
     <div style={{ padding: "0 16px", marginBottom: "8px" }}>
       <Row gutter={[8, 8]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} loading={loading}>
+          <Card bordered={false} loading={loading} style={{ height: "100%" }}>
             <div>
               <div
                 style={{
@@ -74,7 +74,7 @@ const Stats: React.FC = () => {
         </Col>
 
         <Col xs={12} sm={12} lg={6}>
-          <Card bordered={false} loading={loading}>
+          <Card bordered={false} loading={loading} style={{ height: "100%" }}>
             <div>
               <div
                 style={{
@@ -94,7 +94,7 @@ const Stats: React.FC = () => {
         </Col>
 
         <Col xs={12} sm={12} lg={6}>
-          <Card bordered={false} loading={loading}>
+          <Card bordered={false} loading={loading} style={{ height: "100%" }}>
             <div>
               <div
                 style={{
@@ -118,7 +118,7 @@ const Stats: React.FC = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} loading={loading}>
+          <Card bordered={false} loading={loading} style={{ height: "100%" }}>
             <div>
               <div
                 style={{

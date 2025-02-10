@@ -11,18 +11,35 @@ export default function UserProfile() {
   };
   return (
     <MainLayout>
-      <p>User Profile</p>
-      {session && (
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            handleSignOut();
-          }}
-          danger
-        >
-          Sign Out
-        </Button>
-      )}
+      <div
+        style={{
+          padding: "16px",
+          color: "var(--color-accent)",
+        }}
+      >
+        <h2 style={{ textAlign: "center" }}>User Profile</h2>
+      </div>
+      <div
+        style={{
+          marginTop: "16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        {session && (
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSignOut();
+            }}
+            danger
+          >
+            Sign Out
+          </Button>
+        )}
+      </div>
     </MainLayout>
   );
 }
