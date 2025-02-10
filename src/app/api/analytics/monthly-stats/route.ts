@@ -50,7 +50,7 @@ export async function GET() {
             currentBalance,
             monthlyIncome,
             monthlyExpenses,
-            budgetUtilization: Math.round(budgetUtilization)
+            budgetUtilization: budgetUtilization.toFixed(2),
         };
 
         return NextResponse.json(stats);
