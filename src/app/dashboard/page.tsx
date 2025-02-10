@@ -10,13 +10,6 @@ import { Col, Row } from "antd";
 export default function Dashboard() {
   const { data: session } = useSession();
 
-  const stats = {
-    currentBalance: 5000,
-    monthlyIncome: 3000,
-    monthlyExpenses: 2000,
-    budgetUtilization: 72,
-  };
-
   return (
     <MainLayout>
       <div
@@ -24,12 +17,7 @@ export default function Dashboard() {
       >
         <h2>Hi, {session?.user?.name || "Guest"}</h2>
       </div>
-      <Stats
-        currentBalance={stats?.currentBalance}
-        monthlyIncome={stats?.monthlyIncome}
-        monthlyExpenses={stats?.monthlyExpenses}
-        budgetUtilization={stats?.budgetUtilization}
-      />
+      <Stats />
       <div style={{ padding: "0 16px" }}>
         <Row gutter={[8, 8]}>
           <Col xs={24} sm={12} lg={12}>
