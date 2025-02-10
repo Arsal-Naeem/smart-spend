@@ -7,8 +7,8 @@ export async function GET() {
   try {
     const recurrings = await Recurring.find({});
     return NextResponse.json(recurrings);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch recurrings' }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to fetch recurrings', err }, { status: 500 });
   }
 }
 
@@ -18,8 +18,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const recurring = await Recurring.create(body);
     return NextResponse.json(recurring, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create recurring' }, { status: 400 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to create recurring', err }, { status: 400 });
   }
 }
 
@@ -29,7 +29,7 @@ export async function DELETE(request: Request) {
     const { id } = await request.json();
     await Recurring.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete recurring' }, { status: 400 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to delete recurring', err }, { status: 400 });
   }
 }

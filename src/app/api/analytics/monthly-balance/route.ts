@@ -48,9 +48,9 @@ export async function GET() {
 
     return NextResponse.json(monthsData);
 
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to fetch monthly balances' },
+      { error: 'Failed to fetch monthly balances', err },
       { status: 500 }
     );
   }

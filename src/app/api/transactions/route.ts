@@ -29,9 +29,9 @@ export async function GET(request: Request) {
 
     const transactions = await Transaction.find(query);
     return NextResponse.json(transactions);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to fetch transactions' }, 
+      { error: 'Failed to fetch transactions', err }, 
       { status: 500 }
     );
   }
@@ -69,9 +69,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(transaction, { status: 201 });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to create transaction' }, 
+      { error: 'Failed to create transaction', err }, 
       { status: 400 }
     );
   }
@@ -141,9 +141,9 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json(updatedTransaction);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to update transaction' }, 
+      { error: 'Failed to update transaction', err }, 
       { status: 400 }
     );
   }
@@ -195,9 +195,9 @@ export async function DELETE(request: Request) {
     await Transaction.deleteOne({ _id: id, userId: session.user.userId });
 
     return NextResponse.json({ message: 'Transaction deleted successfully' });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to delete transaction' }, 
+      { error: 'Failed to delete transaction', err }, 
       { status: 500 }
     );
   }

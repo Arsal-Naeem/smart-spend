@@ -9,8 +9,8 @@ export async function GET(request: Request) {
     const userId = searchParams.get('userId');
     const user = await User.findOne({ userId });
     return NextResponse.json(user);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to fetch user', err }, { status: 500 });
   }
 }
 
@@ -24,7 +24,7 @@ export async function PUT(request: Request) {
       { new: true }
     );
     return NextResponse.json(updatedUser);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 400 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to update user', err }, { status: 400 });
   }
 }

@@ -29,7 +29,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ profile }) {
       await dbConnect();
 
       const existingUser = await User.findOne({ userId: profile?.sub });
@@ -96,7 +96,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, profile }) {
       if (profile?.sub) {
         token.sub = profile.sub;
       }

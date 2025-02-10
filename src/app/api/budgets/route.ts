@@ -7,8 +7,8 @@ export async function GET() {
   try {
     const budgets = await Budget.find({});
     return NextResponse.json(budgets);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch budgets' }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to fetch budgets', err }, { status: 500 });
   }
 }
 
@@ -18,8 +18,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const budget = await Budget.create(body);
     return NextResponse.json(budget, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create budget' }, { status: 400 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to create budget', err }, { status: 400 });
   }
 }
 
@@ -29,7 +29,7 @@ export async function PUT(request: Request) {
     const { id, ...updateData } = await request.json();
     const updatedBudget = await Budget.findByIdAndUpdate(id, updateData, { new: true });
     return NextResponse.json(updatedBudget);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update budget' }, { status: 400 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to update budget', err }, { status: 400 });
   }
 }

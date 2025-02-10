@@ -45,9 +45,9 @@ export async function GET() {
     }));
 
     return NextResponse.json(categoryData);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      { error: 'Failed to fetch categories', err },
       { status: 500 }
     );
   }
@@ -72,9 +72,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(category, { status: 201 });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to create category' },
+      { error: 'Failed to create category', err },
       { status: 400 }
     );
   }
@@ -102,9 +102,9 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json(category);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to update category' },
+      { error: 'Failed to update category', err },
       { status: 400 }
     );
   }
@@ -137,9 +137,9 @@ export async function DELETE(request: Request) {
     }
 
     return NextResponse.json({ message: 'Category deleted successfully' });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: 'Failed to delete category' },
+      { error: 'Failed to delete category', err },
       { status: 500 }
     );
   }
