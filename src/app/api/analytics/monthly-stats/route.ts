@@ -14,7 +14,7 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const startOfMonth = dayjs().startOf("month").toDate();
+        const startOfMonth = dayjs().startOf("month").toDate().toISOString();
 
         // Get all transactions and categories
         const transactions = await Transaction.find({
