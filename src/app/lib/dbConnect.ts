@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -9,10 +7,18 @@ if (!MONGODB_URI) {
 }
 
 declare global {
-  var mongoose: any;
+  var mongoose: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  } | undefined
 }
 
-let cached = global.mongoose;
+type MongooseCache = {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+};
+
+let cached = (global.mongoose || { conn: null, promise: null }) as MongooseCache;
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
