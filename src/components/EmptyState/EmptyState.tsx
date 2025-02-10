@@ -11,10 +11,18 @@ const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <Empty
-    //   image={Empty.PRESENTED_IMAGE_SIMPLE}
+      image="/emptyWallet.png"
       description={description}
       {...props}
-      style={{margin: "2rem 0"}}
+      style={{
+        margin: "2rem 0",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "12px",
+        opacity: 0.5,
+      }}
     />
   );
 };
