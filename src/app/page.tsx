@@ -10,34 +10,22 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <Title level={1}>Welcome to SmartSpend</Title>
-        <Paragraph style={{ fontSize: "1.2rem", marginBottom: "2rem" }}>
+        <h2 className={styles.title}>Hi, we're SmartSpend.</h2>
+        <p className={styles.description}>
           Take control of your finances with our intelligent expense tracking
           and budgeting solution.
-        </Paragraph>
+        </p>
 
         <Space size="large">
           <Link href="/login">
-            <Button type="primary" size="large" icon={<LoginOutlined />}>
-              Login
+            <Button type="primary" size="large">
+              Get Started
             </Button>
           </Link>
         </Space>
-
-        <div className={styles.features}>
-          <div className={styles.featureItem}>
-            <Title level={4}>Track Expenses</Title>
-            <Paragraph>Monitor your spending habits with ease</Paragraph>
-          </div>
-          <div className={styles.featureItem}>
-            <Title level={4}>Budget Smart</Title>
-            <Paragraph>Create and manage budgets effectively</Paragraph>
-          </div>
-          <div className={styles.featureItem}>
-            <Title level={4}>Insights</Title>
-            <Paragraph>Get detailed analytics of your spending</Paragraph>
-          </div>
-        </div>
+      </div>
+      <div className={styles.image}>
+        <img src="/phone.png" alt="Landing Page" />
       </div>
     </div>
   );
