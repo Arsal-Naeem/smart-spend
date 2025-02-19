@@ -81,7 +81,7 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
             <strong>Title:</strong> {record.title}
           </p>
           <p>
-            <strong>Amount:</strong> ${record.amount.toFixed(2)}
+            <strong>Amount:</strong> Rs.{record.amount.toFixed(2)}
           </p>
           <p>
             <strong>Date:</strong>{" "}

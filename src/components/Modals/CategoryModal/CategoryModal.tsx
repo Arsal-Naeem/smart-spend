@@ -156,7 +156,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="$" style={{ width: "100%" }} min={0} />
+            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
           </Form.Item>
           <Form.Item
             label="Color"

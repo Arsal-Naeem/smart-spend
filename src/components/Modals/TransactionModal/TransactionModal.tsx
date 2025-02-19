@@ -94,7 +94,17 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     }
   }, [isModalOpen]);
 
-  const showModal = () => setIsModalOpen(true);
+  const showModal = () => {
+    if (!isEdit) {
+      const now = dayjs();
+      form.setFieldsValue({
+        date: now,
+        time: now,
+      });
+    }
+    setIsModalOpen(true);
+  };
+
   const handleCancel = () => {
     form.resetFields();
     setIsModalOpen(false);
@@ -243,7 +253,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               rules={[{ required: true, message: "Please select date" }]}
               style={{ width: "50%" }}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
           </Space.Compact>
 
@@ -253,7 +263,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="$" style={{ width: "100%" }} min={0} />
+            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
           </Form.Item>
 
           {transactionType === "expense" && (

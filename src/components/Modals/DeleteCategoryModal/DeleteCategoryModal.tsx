@@ -78,7 +78,7 @@ const DeleteCategoryButton: React.FC<DeleteCategoryButtonProps> = ({
             <strong>Category:</strong> {category.categoryName}
           </p>
           <p>
-            <strong>Budget:</strong> ${category.budget.toFixed(2)}
+            <strong>Budget:</strong> Rs.{category.budget.toFixed(2)}
           </p>
         </div>
       </Modal>

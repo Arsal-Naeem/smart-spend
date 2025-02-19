@@ -81,7 +81,7 @@ const CategoryBreakdown: React.FC = () => {
           }}
         >
           <p style={{ margin: 0, fontWeight: "bold" }}>{payload[0].name}</p>
-          <p style={{ margin: 0 }}>${payload[0].value.toFixed(2)}</p>
+          <p style={{ margin: 0 }}>Rs.{payload[0].value.toFixed(2)}</p>
           <p style={{ margin: 0, opacity: 0.7 }}>
             {((payload[0].value / payload[0].payload.total) * 100).toFixed(1)}%
           </p>

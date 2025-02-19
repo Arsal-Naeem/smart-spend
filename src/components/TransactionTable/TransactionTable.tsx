@@ -109,7 +109,7 @@ const TransactionsTable = () => {
             fontWeight: 500,
           }}
         >
-          ${amount.toFixed(2)}
+          Rs.{amount.toFixed(2)}
         </span>
       ),
     },

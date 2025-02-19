@@ -57,8 +57,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         direction="vertical"
         style={{ width: "100%", marginBottom: "1rem" }}
       >
-        <p>Total Spend: ${totalSpend?.toFixed(2) || 0}</p>
-        <p>Budget: ${budget?.toFixed(2) || 0}</p>
+        <p>Total Spend: Rs.{totalSpend?.toFixed(2) || 0}</p>
+        <p>Budget: Rs.{budget?.toFixed(2) || 0}</p>
         <Progress
           percent={parseFloat(spendPercentage.toFixed(2))}
           status={spendPercentage >= 100 ? "exception" : "normal"}

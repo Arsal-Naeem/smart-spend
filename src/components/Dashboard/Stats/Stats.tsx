@@ -62,7 +62,7 @@ const Stats: React.FC = () => {
                 Current Balance
               </div>
               <div style={{ color: "#cdf345", fontSize: "24px" }}>
-                <WalletOutlined style={{ marginRight: "5px" }} /> $
+                <WalletOutlined style={{ marginRight: "5px" }} /> Rs.
                 <CountUp
                   end={stats.currentBalance}
                   separator=","
@@ -86,7 +86,7 @@ const Stats: React.FC = () => {
                 Income
               </div>
               <div style={{ color: "#45bcf3", fontSize: "24px" }}>
-                <RiseOutlined style={{ marginRight: "5px" }} /> $
+                <RiseOutlined style={{ marginRight: "5px" }} /> Rs.
                 <CountUp end={stats.monthlyIncome} separator="," duration={1} />
               </div>
             </div>
@@ -106,7 +106,7 @@ const Stats: React.FC = () => {
                 Expenses
               </div>
               <div style={{ color: "#f34545", fontSize: "24px" }}>
-                <FallOutlined style={{ marginRight: "5px" }} /> $
+                <FallOutlined style={{ marginRight: "5px" }} /> Rs.
                 <CountUp
                   end={stats.monthlyExpenses}
                   separator=","
