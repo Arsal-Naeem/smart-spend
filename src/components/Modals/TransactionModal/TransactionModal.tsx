@@ -11,6 +11,7 @@ import {
   TimePicker,
   Space,
   message,
+  Radio,
 } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./TransactionModal.module.css";
@@ -26,7 +27,7 @@ interface TransactionModalProps {
   record?: {
     _id: string;
     date: string;
-    type: "income" | "expense";
+    type: "income" | "expense" | "debt";
     title: string;
     amount: number;
     category: string;
@@ -47,6 +48,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("expense");
+  const [debtType, setDebtType] = useState<"given" | "taken">("taken");
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
@@ -220,22 +222,62 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item name="type" initialValue="expense">
             <Segmented
-              options={[
-                { label: "Expense", value: "expense" },
-                { label: "Income", value: "income" },
-              ]}
+              options={
+                !isEdit
+                  ? [
+                      { label: "Expense", value: "expense" },
+                      { label: "Income", value: "income" },
+                      { label: "Debt", value: "debt" },
+                    ]
+                  : [
+                      { label: "Expense", value: "expense" },
+                      { label: "Income", value: "income" },
+                    ]
+              }
               onChange={handleTypeChange}
               value={transactionType}
               block
             />
           </Form.Item>
 
+          {transactionType === "debt" && (
+            <Form.Item
+              label="Debt Type"
+              name="debtType"
+              initialValue="taken"
+              rules={[{ required: true, message: "Please select debt type" }]}
+            >
+              <Select
+                onChange={(value) => setDebtType(value)}
+                style={{ width: "100%" }}
+                options={[
+                  { value: "taken", label: "Taken" },
+                  { value: "given", label: "Given" },
+                ]}
+              />
+            </Form.Item>
+          )}
+
           <Form.Item
-            label="Title"
+            label={
+              transactionType === "debt"
+                ? debtType === "taken"
+                  ? "Lender's Name"
+                  : "Debtor's Name"
+                : "Title"
+            }
             name="title"
             rules={[{ required: true, message: "Please enter title" }]}
           >
-            <Input placeholder="Enter title" />
+            <Input
+              placeholder={
+                transactionType === "debt"
+                  ? debtType === "taken"
+                    ? "Enter lender's name"
+                    : "Enter debtor's name"
+                  : "Enter title"
+              }
+            />
           </Form.Item>
 
           <Space.Compact block style={{ width: "100%" }}>

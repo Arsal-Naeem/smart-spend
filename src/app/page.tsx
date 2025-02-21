@@ -1,10 +1,7 @@
 "use client";
-import { Button, Typography, Space } from "antd";
-import { LoginOutlined } from "@ant-design/icons";
+import { Button, Space } from "antd";
 import Link from "next/link";
 import styles from "./styles/landingPage.module.css";
-
-const { Title, Paragraph } = Typography;
 
 export default function Home() {
   return (

@@ -15,7 +15,7 @@ export default function Dashboard() {
       <div
         style={{ padding: "24px 16px 8px 16px ", color: "var(--color-accent)" }}
       >
-        <h2>Hi, {session?.user?.name || "Guest"}</h2>
+        <h2>Hi, {session?.user?.name || "Guest"} 👋</h2>
       </div>
       <Stats />
       <div style={{ padding: "0 16px" }}>

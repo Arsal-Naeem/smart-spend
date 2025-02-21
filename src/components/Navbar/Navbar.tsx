@@ -62,10 +62,14 @@ const Navbar = () => {
         >
           Categories
         </Link>
+        <Link
+          href="/debts"
+          className={pathname === "/debts" ? styles.active : ""}
+        >
+          Debts
+        </Link>
         <Tooltip title="Feature Coming Soon" placement="bottom">
-          <span className={styles.disabledLink}>
-            Recurring
-          </span>
+          <span className={styles.disabledLink}>Recurring</span>
         </Tooltip>
         <Link
           href="/user-profile"
