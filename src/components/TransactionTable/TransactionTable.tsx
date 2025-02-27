@@ -89,14 +89,6 @@ const TransactionsTable = () => {
 
   return (
     <div style={{ padding: 16 }}>
-      <div
-        style={{
-          padding: "0px 16px 16px 16px ",
-          color: "var(--color-accent)",
-        }}
-      >
-        <h2 style={{ textAlign: "center" }}>Transaction History</h2>
-      </div>
       <Segmented
         options={["All", "Income", "Expense"]}
         value={filter}
@@ -105,7 +97,6 @@ const TransactionsTable = () => {
         block
       />
       <TransactionModal onClose={fetchTransactions} />
-
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {loading ? (
           <>
