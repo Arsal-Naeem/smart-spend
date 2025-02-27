@@ -13,22 +13,37 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get type from query parameters
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '10');
 
     // Build query object
     const query: { userId: string; type?: "income" | "expense" } = {
       userId: session.user.userId
     };
 
-    // Add type to query if valid
     if (type && ['income', 'expense'].includes(type)) {
       query.type = type as "income" | "expense";
     }
 
-    const transactions = await Transaction.find(query).sort({ date: -1 });
-    return NextResponse.json(transactions);
+    // Get total count for pagination
+    const total = await Transaction.countDocuments(query);
+
+    // Get paginated transactions
+    const transactions = await Transaction.find(query)
+      .sort({ date: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    return NextResponse.json({
+      transactions,
+      pagination: {
+        current: page,
+        pageSize,
+        total
+      }
+    });
   } catch (err) {
     return NextResponse.json(
       { error: 'Failed to fetch transactions', err }, 

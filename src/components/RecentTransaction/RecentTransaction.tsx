@@ -20,13 +20,12 @@ const RecentTransaction = () => {
   const fetchTransactions = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/transactions");
+      const response = await fetch("/api/transactions?page=1&pageSize=7");
       if (!response.ok) {
         throw new Error("Failed to fetch transactions");
       }
       const data = await response.json();
-      // Get only the 5 most recent transactions
-      setTransactions(data.slice(0, 5));
+      setTransactions(data.transactions);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     } finally {
