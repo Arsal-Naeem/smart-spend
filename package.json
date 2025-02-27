@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@react-pdf/renderer": "^4.2.2",
     "antd": "^5.23.3",
     "dayjs": "^1.11.13",
     "mongoose": "^8.9.7",

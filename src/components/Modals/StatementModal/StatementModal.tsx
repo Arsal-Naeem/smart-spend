@@ -8,9 +8,12 @@ import {
   Select,
   Segmented,
   Space,
+  message,
 } from "antd";
 import { useState } from "react";
 import dayjs from "dayjs";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import StatementPDF from "./StatementPDF";
 
 const { RangePicker } = DatePicker;
 
@@ -19,9 +22,12 @@ interface StatementModalProps {
 }
 
 const StatementModal: React.FC<StatementModalProps> = ({ onClose }) => {
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [statementType, setStatementType] = useState("monthly");
   const [form] = Form.useForm();
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [statementData, setStatementData] = useState<any>(null);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -33,9 +39,45 @@ const StatementModal: React.FC<StatementModalProps> = ({ onClose }) => {
     setStatementType("monthly");
   };
 
-  const handleSubmit = (values: any) => {
-    console.log("Form values:", values);
-    handleCancel();
+  const handleSubmit = async (values: any) => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams();
+      queryParams.append("type", values.type);
+
+      if (values.type === "monthly") {
+        queryParams.append("month", values.month);
+        queryParams.append("year", values.year.toString());
+      } else if (values.type === "yearly") {
+        queryParams.append("year", values.year.toString());
+      } else if (values.type === "range") {
+        queryParams.append(
+          "startDate",
+          values.dateRange[0].format("YYYY-MM-DD")
+        );
+        queryParams.append("endDate", values.dateRange[1].format("YYYY-MM-DD"));
+      }
+
+      const response = await fetch(
+        `/api/transactions/statement?${queryParams}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch statement data");
+
+      const data = await response.json();
+
+      // Store the data and show download modal
+      setStatementData({
+        data,
+        name: values.name,
+      });
+      handleCancel(); // Close the main modal
+      setIsDownloadModalOpen(true);
+    } catch (error) {
+      console.error("Error generating statement:", error);
+      message.error("Failed to generate statement");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleTypeChange = (value: string) => {
@@ -57,9 +99,20 @@ const StatementModal: React.FC<StatementModalProps> = ({ onClose }) => {
     label: dayjs().month(index).format("MMMM"),
   }));
 
+  const handleDownloadModalClose = () => {
+    setIsDownloadModalOpen(false);
+    setStatementData(null);
+  };
+
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 16px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          padding: "0 16px",
+        }}
+      >
         <Button type="primary" onClick={showModal}>
           Get Statement
         </Button>
@@ -139,14 +192,56 @@ const StatementModal: React.FC<StatementModalProps> = ({ onClose }) => {
             className="form-buttons"
             style={{ marginBottom: 0, textAlign: "right" }}
           >
-            <Button style={{ marginRight: 8 }} onClick={handleCancel}>
+            <Button
+              style={{ marginRight: 8 }}
+              loading={loading}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" loading={loading} htmlType="submit">
               Generate
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title="Download Statement"
+        open={isDownloadModalOpen}
+        onCancel={handleDownloadModalClose}
+        footer={null}
+        centered
+      >
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <h3>Your statement is ready!</h3>
+          <p>Click below to download your statement</p>
+
+          {statementData && (
+            <PDFDownloadLink
+              document={
+                <StatementPDF
+                  data={statementData.data}
+                  statementName={statementData.name}
+                />
+              }
+              fileName={`${statementData.name}.pdf`}
+              style={{
+                display: "inline-block",
+                padding: "10px 20px",
+                background: "#cdf345",
+                color: "#000",
+                borderRadius: "6px",
+                textDecoration: "none",
+                margin: "20px 0",
+              }}
+            >
+              {({ loading }) =>
+                loading ? "Preparing Download..." : "Download Statement"
+              }
+            </PDFDownloadLink>
+          )}
+        </div>
       </Modal>
     </>
   );
