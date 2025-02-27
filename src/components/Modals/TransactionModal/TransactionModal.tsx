@@ -195,11 +195,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   return (
     <>
       {isEdit ? (
-        <Button
-          type="text"
-          icon={<EditOutlined style={{ color: "#fff", fontSize: "18px" }} />}
-          onClick={showModal}
-        />
+        <p style={{ textAlign: "center" }} onClick={showModal}>
+          Edit
+        </p>
       ) : (
         <div className={styles.floatingButton}>
           <Button

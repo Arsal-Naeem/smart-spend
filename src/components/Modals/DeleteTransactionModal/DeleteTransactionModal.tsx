@@ -57,12 +57,9 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
 
   return (
     <>
-      <Button
-        type="text"
-        danger
-        icon={<DeleteOutlined style={{ fontSize: "18px" }} />}
-        onClick={handleDelete}
-      />
+      <p style={{width: "100%",  textAlign: "center" }} onClick={handleDelete}>
+        Delete
+      </p>
 
       <Modal
         title="Confirm Delete"

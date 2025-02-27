@@ -6,6 +6,7 @@ import MainLayout from "@/components/MainLayout/MainLayout";
 import TransactionsTable from "@/components/TransactionTable/TransactionTable";
 import { useSession } from "next-auth/react";
 import { Col, Row } from "antd";
+import RecentTransaction from "@/components/RecentTransaction/RecentTransaction";
 
 export default function Dashboard() {
   const { data: session } = useSession();
@@ -28,7 +29,7 @@ export default function Dashboard() {
           </Col>
         </Row>
       </div>
-      <TransactionsTable />
+      <RecentTransaction />
     </MainLayout>
   );
 }

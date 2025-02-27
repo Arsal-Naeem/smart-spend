@@ -168,6 +168,7 @@ const TransactionsTable = () => {
             : false
         }
         scroll={{ x: true }}
+        size="small"
       />
     </div>
   );
