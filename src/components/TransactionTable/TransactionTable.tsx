@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Segmented, Tag } from "antd";
+import { Table, Segmented, Tag, Card, Skeleton } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import styles from "./TransactionTable.module.css";
 import DeleteTransactionButton from "../Modals/DeleteTransactionModal/DeleteTransactionModal";
 import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 import EmptyState from "../EmptyState/EmptyState";
+import RecentTransactionCard from "../RecentTransaction/RecentTransactionCard";
 
 dayjs.extend(customParseFormat);
 
@@ -134,6 +135,12 @@ const TransactionsTable = () => {
     },
   ];
 
+  const LoadingSkeleton = () => (
+    <Card size="small" style={{ width: "100%" }} bordered={false}>
+      <Skeleton active paragraph={{ rows: 1 }} />
+    </Card>
+  );
+
   return (
     <div style={{ padding: 16 }}>
       <div
@@ -152,24 +159,30 @@ const TransactionsTable = () => {
         block
       />
       <TransactionModal onClose={fetchTransactions} />
-      <Table<TransactionData>
-        columns={columns}
-        dataSource={transactions}
-        loading={loading}
-        locale={{
-          emptyText: <EmptyState description="No transactions found" />,
-        }}
-        pagination={
-          transactions.length > 10
-            ? {
-                pageSize: 10,
-                position: ["bottomCenter"],
-              }
-            : false
-        }
-        scroll={{ x: true }}
-        size="small"
-      />
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {loading ? (
+          <>
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+          </>
+        ) : (
+          transactions.map((transaction) => (
+            <RecentTransactionCard
+              key={transaction._id}
+              _id={transaction._id}
+              title={transaction.title}
+              date={transaction.date}
+              type={transaction.type}
+              amount={transaction.amount}
+              category={transaction.category}
+              notes={transaction.notes}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };

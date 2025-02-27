@@ -39,7 +39,7 @@ const RecentTransaction = () => {
   }, []);
 
   const LoadingSkeleton = () => (
-    <Card style={{ width: "100%" }} bordered={false}>
+    <Card size="small" style={{ width: "100%" }} bordered={false}>
       <Skeleton active paragraph={{ rows: 1 }} />
     </Card>
   );
@@ -61,7 +61,6 @@ const RecentTransaction = () => {
             <LoadingSkeleton />
             <LoadingSkeleton />
             <LoadingSkeleton />
-            <LoadingSkeleton />
           </>
         ) : (
           transactions.map((transaction) => (
@@ -73,6 +72,7 @@ const RecentTransaction = () => {
               type={transaction.type}
               amount={transaction.amount}
               category={transaction.category}
+              notes={transaction.notes}
             />
           ))
         )}
