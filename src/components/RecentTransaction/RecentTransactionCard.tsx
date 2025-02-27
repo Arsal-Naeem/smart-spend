@@ -1,14 +1,11 @@
 import { Card, Typography, Tag, Button, Dropdown } from "antd";
-import {
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  MoreOutlined,
-} from "@ant-design/icons";
+import { MoreOutlined } from "@ant-design/icons";
 import DeleteTransactionButton from "../Modals/DeleteTransactionModal/DeleteTransactionModal";
 import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 import dayjs from "dayjs";
 import type { MenuProps } from "antd";
 import ViewNotesButton from "../Modals/ViewNotesModal/ViewNotesModal";
+import { formatNumber } from '../../utils/formatCurrency';
 
 interface RecentTransactionCardProps {
   _id: string;
@@ -78,7 +75,7 @@ const RecentTransactionCard: React.FC<RecentTransactionCardProps> = ({
           <div style={{ marginBottom: 4 }}>
             <Text strong>{title}</Text>
           </div>
-          <div style={{ opacity: 0.75 }}>
+          <div style={{ fontSize: 10, opacity: 0.75 }}>
             <Text type="secondary" style={{ fontSize: "12px" }}>
               {dayjs(date).format("DD MMM YYYY, hh:mm A")}
             </Text>
@@ -98,9 +95,8 @@ const RecentTransactionCard: React.FC<RecentTransactionCardProps> = ({
             }}
           >
             <span>
-              {isExpense ? "- " : "+ "}Rs. {Math.abs(amount).toFixed(2)}
+              {isExpense ? "- " : "+ "}Rs. {formatNumber(amount)}
             </span>
-            {type === "income" ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
           </Tag>
           <Dropdown
             menu={{ items }}
