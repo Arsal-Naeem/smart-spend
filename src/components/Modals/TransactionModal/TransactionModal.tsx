@@ -285,7 +285,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               rules={[{ required: true, message: "Please select time" }]}
               style={{ width: "50%" }}
             >
-              <TimePicker format="HH:mm" style={{ width: "100%" }} />
+              <TimePicker format="hh:mm A" style={{ width: "100%" }} use12Hours />
             </Form.Item>
             <Form.Item
               label="Date"

@@ -151,6 +151,10 @@
   background-color: #404040 !important;
 }
 
+li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner{
+  background-color: #404040 !important;
+}
+
 @media screen and (max-width: 580px) {
   .ant-statistic-title {
     font-size: 0.8rem;
