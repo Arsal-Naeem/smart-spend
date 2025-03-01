@@ -10,13 +10,27 @@ import {
 import { MoreOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import DebtDeleteButton from "../Modals/DebtDeleteModal/DebtDeleteModal";
+import DebtPaymentButton from "../Modals/DebtPaymentModal.tsx/DebtPaymentModal";
+import DebtDetailDrawer from "../Modals/DebtDetailDrawer.tsx/DebtDetailDrawer";
 
 // Initialize the relative time plugin
 dayjs.extend(relativeTime);
 
 const { Text } = Typography;
 
+interface DebtTransaction {
+  _id: string;
+  type: "return" | "add";
+  amount: number;
+  date: string;
+  notes?: string;
+  category?: string;
+  title?: string;
+}
+
 interface DebtCardProps {
+  _id: string;
   title: string;
   totalAmount: number;
   amountPaid: number;
@@ -24,14 +38,17 @@ interface DebtCardProps {
   debtType: "given" | "taken";
   date: string;
   notes: string;
+  transactions: DebtTransaction[];
 }
 
 const DebtCard: React.FC<DebtCardProps> = ({
+  _id,
   title,
   totalAmount,
   amountPaid,
   amountRemaining,
   date,
+  transactions,
 }) => {
   const progressPercentage = parseFloat(
     ((amountPaid / totalAmount) * 100).toFixed(1)
@@ -65,15 +82,59 @@ const DebtCard: React.FC<DebtCardProps> = ({
             items: [
               {
                 key: "1",
-                label: "Mark as Paid",
+                label: (
+                  <DebtDetailDrawer
+                    record={{
+                      _id,
+                      title,
+                      totalAmount,
+                      amountPaid,
+                      amountRemaining,
+                      debtType,
+                      date,
+                      notes,
+                      transactions,
+                    }}
+                  />
+                ),
               },
-              {
-                key: "2",
-                label: "Pay",
-              },
+              // {
+              //   key: "2",
+              //   label: "Mark as paid",
+              // },
               {
                 key: "3",
-                label: "Delete",
+                label: (
+                  <DebtPaymentButton
+                    record={{
+                      _id,
+                      title,
+                      totalAmount,
+                      amountPaid,
+                      amountRemaining,
+                      debtType,
+                      date,
+                      notes,
+                    }}
+                  />
+                ),
+              },
+              {
+                key: "4",
+                label: (
+                  <DebtDeleteButton
+                    record={{
+                      _id,
+                      title,
+                      totalAmount,
+                      amountPaid,
+                      amountRemaining,
+                      debtType,
+                      date,
+                      notes,
+                    }}
+                  />
+                ),
               },
             ],
           }}

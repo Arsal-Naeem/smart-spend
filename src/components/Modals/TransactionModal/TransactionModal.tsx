@@ -277,6 +277,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             />
           </Form.Item>
 
+          <Form.Item
+            label="Amount"
+            name="amount"
+            initialValue={0}
+            rules={[{ required: true, message: "Please enter amount" }]}
+          >
+            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
+          </Form.Item>
+
           <Space.Compact block style={{ width: "100%" }}>
             <Form.Item
               label="Time"
@@ -284,7 +293,11 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               rules={[{ required: true, message: "Please select time" }]}
               style={{ width: "50%" }}
             >
-              <TimePicker format="hh:mm A" style={{ width: "100%" }} use12Hours />
+              <TimePicker
+                format="hh:mm A"
+                style={{ width: "100%" }}
+                use12Hours
+              />
             </Form.Item>
             <Form.Item
               label="Date"
@@ -295,15 +308,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
           </Space.Compact>
-
-          <Form.Item
-            label="Amount"
-            name="amount"
-            initialValue={0}
-            rules={[{ required: true, message: "Please enter amount" }]}
-          >
-            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
-          </Form.Item>
 
           {transactionType === "expense" && (
             <Form.Item

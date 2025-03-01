@@ -13,6 +13,8 @@
   color: #fff !important;
 }
 
+
+
 .ant-card::before {
   content: "";
   position: absolute;
@@ -31,6 +33,10 @@
   border-radius: 12px 12px 0 0 !important;
 }
 
+.ant-drawer .ant-drawer-content{
+  background-color: #1E1E1F !important;
+}
+
 .ant-modal-header {
   background: none !important;
   margin-bottom: 24px !important;
@@ -42,6 +48,11 @@
 }
 
 .ant-modal-wrap {
+  background-color: #00000050;
+  backdrop-filter: blur(5px);
+}
+
+.ant-drawer .ant-drawer-mask{
   background-color: #00000050;
   backdrop-filter: blur(5px);
 }
@@ -153,6 +164,11 @@
 
 li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner{
   background-color: #404040 !important;
+}
+
+.ant-descriptions-item-label{
+  color: #fff !important;
+  background-color: #ffffff00 !important;
 }
 
 @media screen and (max-width: 580px) {
