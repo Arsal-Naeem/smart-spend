@@ -2,6 +2,7 @@
 import { Button, Space } from "antd";
 import Link from "next/link";
 import styles from "./styles/landingPage.module.css";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
         </Space>
       </div>
       <div className={styles.image}>
-        <img src="/phone.png" alt="Landing Page" />
+        <Image src="/phone.png" alt="Landing Page" />
       </div>
     </div>
   );

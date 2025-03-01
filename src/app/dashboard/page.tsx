@@ -3,7 +3,6 @@ import CategoryBreakdown from "@/components/Dashboard/CategoryBreakdown/Category
 import MonthlyBalanceTrend from "@/components/Dashboard/MonthlyBalanceTrend/MonthlyBalanceTrend";
 import Stats from "@/components/Dashboard/Stats/Stats";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import TransactionsTable from "@/components/TransactionTable/TransactionTable";
 import { useSession } from "next-auth/react";
 import { Col, Row } from "antd";
 import RecentTransaction from "@/components/RecentTransaction/RecentTransaction";

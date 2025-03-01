@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, message } from "antd"; // Add message from antd
-import { DeleteOutlined } from "@ant-design/icons";
+import { Modal, message } from "antd"; // Add message from antd
 import dayjs from "dayjs";
 
 interface TransactionData {

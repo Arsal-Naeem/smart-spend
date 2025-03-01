@@ -21,7 +21,7 @@ interface StatementModalProps {
   onClose?: () => void;
 }
 
-const StatementModal: React.FC<StatementModalProps> = ({ onClose }) => {
+const StatementModal: React.FC<StatementModalProps> = () => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [statementType, setStatementType] = useState("monthly");

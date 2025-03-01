@@ -3,8 +3,6 @@ import {
   Button,
   Card,
   Dropdown,
-  Flex,
-  Menu,
   Progress,
   Space,
   Typography,
@@ -34,8 +32,6 @@ const DebtCard: React.FC<DebtCardProps> = ({
   amountPaid,
   amountRemaining,
   date,
-  debtType,
-  notes,
 }) => {
   const progressPercentage = parseFloat(
     ((amountPaid / totalAmount) * 100).toFixed(1)
