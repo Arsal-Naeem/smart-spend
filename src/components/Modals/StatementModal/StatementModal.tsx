@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import dayjs from "dayjs";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import StatementPDF from "./StatementPDF";
+import StatementPDF from "../../PDFTemplates/StatementPDF";
 
 const { RangePicker } = DatePicker;
 

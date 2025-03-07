@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Drawer, Timeline, Typography, Descriptions, Flex, Button, Progress } from "antd";
+import {
+  Drawer,
+  Timeline,
+  Typography,
+  Descriptions,
+  Flex,
+  Button,
+  Progress,
+} from "antd";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
+import { pdf } from "@react-pdf/renderer";
+import DebtReport from "@/components/PDFTemplates/DebtReport";
 
 const { Text, Title } = Typography;
 
@@ -11,8 +21,8 @@ interface DebtTransaction {
   amount: number;
   date: string;
   notes?: string;
+  reason?: string;
   category?: string;
-  title?: string;
 }
 
 interface DebtDetailProps {
@@ -30,6 +40,7 @@ interface DebtDetailProps {
 }
 
 const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
 
@@ -41,9 +52,48 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
     setOpen(false);
   };
 
+  const generatePDF = async () => {
+    try {
+      setPdfLoading(true);
+      const blob = await pdf(
+        <DebtReport record={record} session={session} />
+      ).toBlob();
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${record.title}-debt-report.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
   const progressPercentage = parseFloat(
     ((record.amountPaid / record.totalAmount) * 100).toFixed(1)
   );
+
+  const getTransactionDescription = (transaction: DebtTransaction, record: DebtDetailProps['record'], userName?: string) => {
+    const amount = `Rs.${transaction.amount.toFixed(2)}`;
+    const reasonText = transaction.reason ? ` for ${transaction.reason}` : '';
+    
+    if (record.debtType === "given") {
+      return transaction.type === "return"
+        ? `${record.title} gave ${amount} to ${userName}${reasonText}`
+        : `${record.title} borrowed ${amount} from ${userName}${reasonText}`;
+    } else {
+      return transaction.type === "return"
+        ? `${userName} gave ${amount} to ${record.title}${reasonText}`
+        : `${userName} borrowed ${amount} from ${record.title}${reasonText}`;
+    }
+  };
 
   return (
     <>
@@ -59,7 +109,12 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
           <div>
             <Flex align="center" justify="space-between">
               <Title level={5}>Overview</Title>
-              <Button type="primary" size="small">
+              <Button
+                type="primary"
+                loading={pdfLoading}
+                size="small"
+                onClick={generatePDF}
+              >
                 Generate Report
               </Button>
             </Flex>
@@ -137,29 +192,7 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
                   children: (
                     <div>
                       <Text strong>
-                        {record.debtType === "given"
-                          ? transaction.type === "return"
-                            ? `${
-                                record.title
-                              } returned Rs.${transaction.amount.toFixed(
-                                2
-                              )} to ${session?.user?.name}`
-                            : `${
-                                record.title
-                              } borrowed Rs.${transaction.amount.toFixed(
-                                2
-                              )} from ${session?.user?.name}`
-                          : transaction.type === "return"
-                          ? `${
-                              session?.user?.name
-                            } returned Rs.${transaction.amount.toFixed(2)} to ${
-                              record.title
-                            }`
-                          : `${
-                              session?.user?.name
-                            } borrowed Rs.${transaction.amount.toFixed(
-                              2
-                            )} from ${record.title}`}
+                        {getTransactionDescription(transaction, record, session?.user?.name)}
                       </Text>
                       <br />
                       <p style={{ fontSize: "12px", opacity: 0.75 }}>

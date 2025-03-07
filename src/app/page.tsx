@@ -23,7 +23,14 @@ export default function Home() {
         </Space>
       </div>
       <div className={styles.image}>
-        <Image src="/phone.png" alt="Landing Page" />
+        <Image
+          src="/phone.png"
+          alt="Landing Page"
+          width={400}
+          height={400}
+          priority
+          className={styles.img}
+        />
       </div>
     </div>
   );

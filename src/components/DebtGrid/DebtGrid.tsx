@@ -8,8 +8,8 @@ interface DebtTransaction {
   type: "return" | "add";
   amount: number;
   date: string;
+  reason?: string;
   category?: string;
-  title?: string;
 }
 
 interface Debt {
@@ -28,13 +28,42 @@ const debts: Debt[] = [
   {
     _id: "1",
     title: "Wasay Baboo",
-    totalAmount: 560,
-    amountPaid: 0,
-    amountRemaining: 560,
+    totalAmount: 840,
+    amountPaid: 150,
+    amountRemaining: 690,
     date: "2025-02-27T20:47:00.000Z",
     debtType: "given",
     notes: "Monthly payment of $500",
-    transactions: [],
+    transactions: [
+      {
+        _id: "t1",
+        type: "add",
+        amount: 80,
+        date: "2025-03-03T07:00:00.000Z",
+        reason: "chai",
+      },
+      {
+        _id: "t1",
+        type: "add",
+        amount: 200,
+        date: "2025-03-02T07:00:00.000Z",
+        reason: "T2K Academy",
+      },
+      {
+        _id: "t1",
+        type: "return",
+        amount: 150,
+        date: "2025-03-01T07:00:00.000Z",
+        reason: "Gaming Zone",
+      },
+      {
+        _id: "t1",
+        type: "add",
+        amount: 560,
+        date: "2025-02-26T21:00:00.000Z",
+        reason: "Pizza/Burger",
+      },
+    ],
   },
   {
     _id: "2",
@@ -66,7 +95,7 @@ const debts: Debt[] = [
       },
       {
         _id: "t3",
-        type: "add",
+        type: "return",
         amount: 100,
         date: "2025-03-10T14:20:00.000Z",
       },

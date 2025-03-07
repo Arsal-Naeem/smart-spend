@@ -46,7 +46,9 @@ const DebtCard: React.FC<DebtCardProps> = ({
   title,
   totalAmount,
   amountPaid,
+  debtType,
   amountRemaining,
+  notes,
   date,
   transactions,
 }) => {
