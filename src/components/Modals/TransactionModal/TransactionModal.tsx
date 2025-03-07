@@ -224,7 +224,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                   ? [
                       { label: "Expense", value: "expense" },
                       { label: "Income", value: "income" },
-                      { label: "Debt", value: "debt" },
+                      // { label: "Debt", value: "debt" },
                     ]
                   : [
                       { label: "Expense", value: "expense" },

@@ -32,7 +32,7 @@ const TransactionsTable = () => {
   const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
     pageSize: 10,
-    total: 10
+    total: 10,
   });
 
   const fetchTransactions = async () => {
@@ -49,9 +49,9 @@ const TransactionsTable = () => {
       }
       const data = await response.json();
       setTransactions(data.transactions);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
-        total: data.pagination.total
+        total: data.pagination.total,
       }));
     } catch (error) {
       console.error("Error fetching transactions:", error);
@@ -74,16 +74,45 @@ const TransactionsTable = () => {
   };
 
   const handlePageChange = (page: number, pageSize?: number) => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       current: page,
-      pageSize: pageSize || prev.pageSize
+      pageSize: pageSize || prev.pageSize,
     }));
   };
 
   const LoadingSkeleton = () => (
     <Card size="small" style={{ width: "100%" }} bordered={false}>
       <Skeleton active paragraph={{ rows: 1 }} />
+    </Card>
+  );
+
+  const NoTransactions = () => (
+    <Card bordered={false} style={{ width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px",
+          padding: "32px 0",
+        }}
+      >
+        <img
+          src="/emptyWallet.png"
+          alt="Empty wallet"
+          style={{ width: "120px", height: "auto", opacity: 0.5 }}
+        />
+        <p
+          style={{
+            opacity: 0.5,
+            fontSize: "16px",
+            fontWeight: 500,
+          }}
+        >
+          No Recent Transactions
+        </p>
+      </div>
     </Card>
   );
 
@@ -105,6 +134,8 @@ const TransactionsTable = () => {
             <LoadingSkeleton />
             <LoadingSkeleton />
           </>
+        ) : transactions.length === 0 ? (
+          <NoTransactions />
         ) : (
           <>
             {transactions.map((transaction) => (
@@ -119,7 +150,13 @@ const TransactionsTable = () => {
                 notes={transaction.notes}
               />
             ))}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "16px",
+              }}
+            >
               <Pagination
                 current={pagination.current}
                 total={pagination.total}
