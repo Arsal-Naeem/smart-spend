@@ -63,6 +63,7 @@
   border: 1px solid var(--border-color);
   border-radius: 12px !important;
   box-shadow: var(--shadow-1);
+  margin: 24px 0;
 }
 
 .ant-statistic-title {

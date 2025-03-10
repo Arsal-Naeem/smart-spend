@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import CategoryCard from "../CategoryCard/CategoryCard";
 import CategoryModal from "../Modals/CategoryModal/CategoryModal";
 import { Card, message, Skeleton } from "antd";
+import LoadingSkeleton from "../HelperComponents/LoadingSkeleton";
 
 interface Category {
   _id: string;
@@ -40,12 +41,6 @@ const CategoryGrid = () => {
     }
   };
 
-  const LoadingSkeleton = () => (
-    <Card style={{ width: 300 }} bordered={false}>
-      <Skeleton active paragraph={{ rows: 5 }} />
-    </Card>
-  );
-
   return (
     <div
       style={{
@@ -60,11 +55,7 @@ const CategoryGrid = () => {
     >
       {loading ? (
         <>
-          <LoadingSkeleton />
-          <LoadingSkeleton />
-          <LoadingSkeleton />
-          <LoadingSkeleton />
-          <LoadingSkeleton />
+          <LoadingSkeleton type="debt" quantity={3} />
         </>
       ) : (
         <>

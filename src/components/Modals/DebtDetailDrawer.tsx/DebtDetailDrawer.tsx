@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { pdf } from "@react-pdf/renderer";
 import DebtReport from "@/components/PDFTemplates/DebtReport";
+import { EditOutlined } from "@ant-design/icons";
 
 const { Text, Title } = Typography;
 
@@ -34,7 +35,6 @@ interface DebtDetailProps {
     amountRemaining: number;
     debtType: "given" | "taken";
     date: string;
-    notes: string;
     transactions: DebtTransaction[];
   };
 }
@@ -192,7 +192,7 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
                   children: (
                     <div>
                       <Text strong>
-                        {getTransactionDescription(transaction, record, session?.user?.name)}
+                        {getTransactionDescription(transaction, record, session?.user?.name)} <EditOutlined style={{ marginRight: '4px' }} />
                       </Text>
                       <br />
                       <p style={{ fontSize: "12px", opacity: 0.75 }}>

@@ -326,8 +326,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             </Form.Item>
           )}
 
-          <Form.Item label="Notes" name="notes">
-            <Input.TextArea placeholder="Enter notes" />
+          <Form.Item
+            label={transactionType === "debt" ? "Reason" : "Notes"}
+            name="notes"
+          >
+            <Input.TextArea
+              placeholder={
+                transactionType === "debt" ? "Enter reason" : "Enter notes"
+              }
+            />
           </Form.Item>
 
           <Form.Item

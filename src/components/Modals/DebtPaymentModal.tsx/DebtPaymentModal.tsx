@@ -26,7 +26,6 @@ interface DebtData {
   amountRemaining: number;
   debtType: "given" | "taken";
   date: string;
-  notes: string;
 }
 
 interface DebtPaymentModalProps {
@@ -255,6 +254,14 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
               />
             </Form.Item>
           )}
+
+          <Form.Item
+            label="Reason"
+            name="reason"
+            rules={[{ required: false }]}
+          >
+            <Input.TextArea placeholder="Enter Reason" />
+          </Form.Item>
 
           <div style={{ margin: "1rem 0 1.5rem 0" }}>
             <Card>

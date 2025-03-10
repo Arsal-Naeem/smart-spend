@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 import RecentTransactionCard from "../RecentTransaction/RecentTransactionCard";
+import NoTransactions from "../HelperComponents/NoTransactions";
+import LoadingSkeleton from "../HelperComponents/LoadingSkeleton";
 
 dayjs.extend(customParseFormat);
 
@@ -32,7 +34,7 @@ const TransactionsTable = () => {
   const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
     pageSize: 10,
-    total: 10
+    total: 10,
   });
 
   const fetchTransactions = async () => {
@@ -49,9 +51,9 @@ const TransactionsTable = () => {
       }
       const data = await response.json();
       setTransactions(data.transactions);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
-        total: data.pagination.total
+        total: data.pagination.total,
       }));
     } catch (error) {
       console.error("Error fetching transactions:", error);
@@ -74,18 +76,12 @@ const TransactionsTable = () => {
   };
 
   const handlePageChange = (page: number, pageSize?: number) => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       current: page,
-      pageSize: pageSize || prev.pageSize
+      pageSize: pageSize || prev.pageSize,
     }));
   };
-
-  const LoadingSkeleton = () => (
-    <Card size="small" style={{ width: "100%" }} bordered={false}>
-      <Skeleton active paragraph={{ rows: 1 }} />
-    </Card>
-  );
 
   return (
     <div style={{ padding: 16 }}>
@@ -100,11 +96,10 @@ const TransactionsTable = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {loading ? (
           <>
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-          </>
+          <LoadingSkeleton type="transaction" quantity={4} />
+        </>
+        ) : transactions.length === 0 ? (
+          <NoTransactions />
         ) : (
           <>
             {transactions.map((transaction) => (
@@ -119,7 +114,13 @@ const TransactionsTable = () => {
                 notes={transaction.notes}
               />
             ))}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "16px",
+              }}
+            >
               <Pagination
                 current={pagination.current}
                 total={pagination.total}

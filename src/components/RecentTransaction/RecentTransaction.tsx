@@ -1,7 +1,8 @@
 "use client";
-import { Card, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import RecentTransactionCard from "./RecentTransactionCard";
+import NoTransactions from "../HelperComponents/NoTransactions";
+import LoadingSkeleton from "../HelperComponents/LoadingSkeleton";
 
 interface TransactionData {
   _id: string;
@@ -37,12 +38,6 @@ const RecentTransaction = () => {
     fetchTransactions();
   }, []);
 
-  const LoadingSkeleton = () => (
-    <Card size="small" style={{ width: "100%" }} bordered={false}>
-      <Skeleton active paragraph={{ rows: 1 }} />
-    </Card>
-  );
-
   return (
     <div style={{ padding: 16 }}>
       <div
@@ -56,11 +51,10 @@ const RecentTransaction = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {loading ? (
           <>
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
+            <LoadingSkeleton type="transaction" quantity={4} />
           </>
+        ) : transactions.length === 0 ? (
+          <NoTransactions />
         ) : (
           transactions.map((transaction) => (
             <RecentTransactionCard

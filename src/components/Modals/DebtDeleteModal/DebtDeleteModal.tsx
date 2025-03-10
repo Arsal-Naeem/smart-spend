@@ -11,7 +11,6 @@ interface DebtData {
   amountRemaining: number;
   debtType: "given" | "taken";
   date: string;
-  notes: string;
 }
 
 interface DebtDeleteModalProps {
