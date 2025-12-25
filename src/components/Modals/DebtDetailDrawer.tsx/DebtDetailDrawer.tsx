@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { pdf } from "@react-pdf/renderer";
 import DebtReport from "@/components/PDFTemplates/DebtReport";
-import { EditOutlined } from "@ant-design/icons";
+import DebtPaymentButton from "../DebtPaymentModal.tsx/DebtPaymentModal";
 
 const { Text, Title } = Typography;
 
@@ -192,7 +192,17 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
                   children: (
                     <div>
                       <Text strong>
-                        {getTransactionDescription(transaction, record, session?.user?.name)} <EditOutlined style={{ marginRight: '4px' }} />
+                        {getTransactionDescription(transaction, record, session?.user?.name)}
+                        <DebtPaymentButton
+                          record={record}
+                          transaction={transaction}
+                          isEdit={true}
+                          onClose={() => {
+                            // Implement refresh logic here
+                            // This could be a prop passed down from the parent
+                            // to refresh the transactions list
+                          }}
+                        />
                       </Text>
                       <br />
                       <p style={{ fontSize: "12px", opacity: 0.75 }}>

@@ -17,7 +17,7 @@ export default function UserProfile() {
           color: "var(--color-accent)",
         }}
       >
-        <h2 style={{ textAlign: "center" }}>User Profile</h2>
+        <h2 style={{ textAlign: "center" }}>Settings</h2>
       </div>
       <div
         style={{

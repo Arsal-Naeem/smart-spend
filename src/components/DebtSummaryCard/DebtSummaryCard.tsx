@@ -9,7 +9,7 @@ interface DebtSummary {
 
 const debtSummary: DebtSummary = {
   outstandingDebt: 0,
-  outstandingCredit: 9000,
+  outstandingCredit: 6040,
 };
 
 const DebtSummaryCard = () => {
