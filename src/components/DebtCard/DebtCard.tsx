@@ -38,6 +38,7 @@ interface DebtCardProps {
   debtType: "given" | "taken";
   date: string;
   transactions: DebtTransaction[];
+  onRefresh?: () => void;
 }
 
 const DebtCard: React.FC<DebtCardProps> = ({
@@ -49,6 +50,7 @@ const DebtCard: React.FC<DebtCardProps> = ({
   amountRemaining,
   date,
   transactions,
+  onRefresh,
 }) => {
   const progressPercentage = parseFloat(
     ((amountPaid / totalAmount) * 100).toFixed(1)
@@ -94,6 +96,7 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       date,
                       transactions,
                     }}
+                    onRefresh={onRefresh}
                   />
                 ),
               },
@@ -114,6 +117,7 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       debtType,
                       date,
                     }}
+                    onClose={onRefresh}
                   />
                 ),
               },
@@ -130,6 +134,7 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       debtType,
                       date,
                     }}
+                    onClose={onRefresh}
                   />
                 ),
               },

@@ -37,9 +37,10 @@ interface DebtDetailProps {
     date: string;
     transactions: DebtTransaction[];
   };
+  onRefresh?: () => void;
 }
 
-const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
+const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record, onRefresh }) => {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
@@ -197,11 +198,7 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
                           record={record}
                           transaction={transaction}
                           isEdit={true}
-                          onClose={() => {
-                            // Implement refresh logic here
-                            // This could be a prop passed down from the parent
-                            // to refresh the transactions list
-                          }}
+                          onClose={onRefresh}
                         />
                       </Text>
                       <br />

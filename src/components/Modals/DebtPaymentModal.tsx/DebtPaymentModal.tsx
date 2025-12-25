@@ -102,6 +102,7 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
         notes: values.notes,
         category: values.category,
         reason: values.reason,
+        title: values.title,
       };
 
       if (isEdit && transaction) {
@@ -185,12 +186,18 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   }, [paymentModalVisible]);
 
   useEffect(() => {
-    if (amount > record.amountRemaining) {
-      setCalculatedRemaining(0);
+    if (paymentType === "return") {
+      // Subtracting payment from debt
+      if (amount > record.amountRemaining) {
+        setCalculatedRemaining(0);
+      } else {
+        setCalculatedRemaining(record.amountRemaining - amount);
+      }
     } else {
-      setCalculatedRemaining(record.amountRemaining - amount);
+      // Adding to debt
+      setCalculatedRemaining(record.amountRemaining + amount);
     }
-  }, [form, amount, record.amountRemaining]);
+  }, [form, amount, record.amountRemaining, paymentType]);
 
   useEffect(() => {
     if (isEdit && transaction) {
@@ -202,6 +209,7 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
         time: datetime,
         category: transaction.category,
         reason: transaction.reason,
+        notes: transaction.notes,
       });
       setPaymentType(transaction.type);
       setAmount(transaction.amount);
@@ -348,7 +356,11 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit" loading={loading}>
-                {paymentType === "return" ? "Return Payment" : "Add to Debt"}
+                {isEdit
+                  ? "Update"
+                  : paymentType === "return"
+                  ? "Return Payment"
+                  : "Add to Debt"}
               </Button>
             </Space>
           </Form.Item>

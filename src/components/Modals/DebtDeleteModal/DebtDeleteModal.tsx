@@ -32,14 +32,13 @@ const DebtDeleteButton: React.FC<DebtDeleteModalProps> = ({
   const confirmDelete = async () => {
     try {
       setLoading(true);
-      // API implementation will go here
-      // const response = await fetch(`/api/debts?id=${record._id}`, {
-      //   method: "DELETE",
-      // });
+      const response = await fetch(`/api/debts?id=${record._id}`, {
+        method: "DELETE",
+      });
 
-      // if (!response.ok) {
-      //   throw new Error("Failed to delete debt");
-      // }
+      if (!response.ok) {
+        throw new Error("Failed to delete debt");
+      }
 
       message.success("Debt deleted successfully");
       setDeleteModalVisible(false);

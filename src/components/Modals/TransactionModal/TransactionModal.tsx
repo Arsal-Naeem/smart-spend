@@ -55,7 +55,14 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   useEffect(() => {
     if (isEdit && record) {
       const datetime = dayjs(record.date);
-      const normalizedType = record.type.toLowerCase() as "income" | "expense";
+      const normalizedType = record.type.toLowerCase() as
+        | "income"
+        | "expense"
+        | "debt";
+
+      // Get debtType from record if it exists (for debt transactions)
+      const debtTypeValue = (record as any).debtType;
+
       form.setFieldsValue({
         type: normalizedType,
         title: record.title,
@@ -64,8 +71,13 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         time: datetime,
         category: record.category,
         notes: record.notes,
+        debtType: debtTypeValue || "taken",
       });
       setTransactionType(normalizedType);
+
+      if (debtTypeValue) {
+        setDebtType(debtTypeValue);
+      }
     }
   }, [isEdit, record, form, isModalOpen]);
 
@@ -126,47 +138,90 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               .toISOString()
           : null;
 
-      const formattedValues = {
-        type: values.type,
-        title: values.title,
-        amount: values.amount,
-        date: combinedDateTime,
-        category: values.category,
-        notes: values.notes,
-      };
+      // Check if this is a debt transaction
+      if (values.type === "debt") {
+        const debtPayload = {
+          title: values.title,
+          totalAmount: values.amount,
+          debtType: values.debtType,
+          date: combinedDateTime,
+          notes: values.notes,
+        };
 
-      if (isEdit && record) {
-        const response = await fetch(`/api/transactions`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            _id: record._id,
-            ...formattedValues,
-          }),
-        });
+        if (isEdit && record) {
+          const response = await fetch(`/api/debts?id=${record._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(debtPayload),
+          });
 
-        if (!response.ok) {
-          throw new Error("Failed to update transaction");
+          if (!response.ok) {
+            throw new Error("Failed to update debt");
+          }
+
+          message.success("Debt updated successfully");
+        } else {
+          // Create new debt
+          const response = await fetch("/api/debts", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(debtPayload),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to create debt");
+          }
+
+          message.success("Debt added successfully");
         }
-
-        message.success("Transaction updated successfully");
       } else {
-        // Create new transaction
-        const response = await fetch("/api/transactions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formattedValues),
-        });
+        // Handle regular income/expense transactions
+        const formattedValues = {
+          type: values.type,
+          title: values.title,
+          amount: values.amount,
+          date: combinedDateTime,
+          category: values.category,
+          notes: values.notes,
+        };
 
-        if (!response.ok) {
-          throw new Error("Failed to create transaction");
+        if (isEdit && record) {
+          const response = await fetch(`/api/transactions`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              _id: record._id,
+              ...formattedValues,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to update transaction");
+          }
+
+          message.success("Transaction updated successfully");
+        } else {
+          // Create new transaction
+          const response = await fetch("/api/transactions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formattedValues),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to create transaction");
+          }
+
+          message.success("Transaction added successfully");
         }
-
-        message.success("Transaction added successfully");
       }
 
       setIsModalOpen(false);
@@ -175,7 +230,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
       if (onClose) {
         onClose();
-        console.log("is it hitting");
       }
     } catch (error) {
       console.error("Error creating/updating transaction:", error);
@@ -229,6 +283,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                   : [
                       { label: "Expense", value: "expense" },
                       { label: "Income", value: "income" },
+                      { label: "Debt", value: "debt" },
                     ]
               }
               onChange={handleTypeChange}
@@ -309,22 +364,23 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             </Form.Item>
           </Space.Compact>
 
-          {transactionType === "expense" && (
-            <Form.Item
-              label="Category"
-              name="category"
-              rules={[{ required: true, message: "Please select category" }]}
-            >
-              <Select
-                options={categories}
-                placeholder="Select Category"
-                loading={categories.length === 0}
-                notFoundContent={
-                  <EmptyState description="No categories found" />
-                }
-              />
-            </Form.Item>
-          )}
+          {transactionType === "expense" ||
+            (transactionType === "debt" && debtType === "taken" && (
+              <Form.Item
+                label="Category"
+                name="category"
+                rules={[{ required: true, message: "Please select category" }]}
+              >
+                <Select
+                  options={categories}
+                  placeholder="Select Category"
+                  loading={categories.length === 0}
+                  notFoundContent={
+                    <EmptyState description="No categories found" />
+                  }
+                />
+              </Form.Item>
+            ))}
 
           <Form.Item
             label={transactionType === "debt" ? "Reason" : "Notes"}
