@@ -29,9 +29,6 @@ export async function GET() {
       const month = dayjs(transaction.date).format('MMM'); // Get month abbreviation
       const amount = transaction.amount * (transaction.type === 'expense' ? -1 : 1);
 
-      console.log('month: ', month);
-      console.log('amount: ', amount);
-
       monthlyBalances.set(
         month,
         (monthlyBalances.get(month) || 0) + amount

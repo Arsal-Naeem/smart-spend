@@ -1,6 +1,6 @@
 "use client";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import { Button, Form, Input, Select, Card, Divider } from "antd";
+import { Button, Form, Input, InputNumber, Select, Card, Divider } from "antd";
 import { useCurrency } from "@/hooks/useCurrency";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -31,7 +31,7 @@ export default function UserProfile() {
   );
 
   const updateUser = useMutation({
-    mutationFn: async (values: { name: string; currency: string }) => {
+    mutationFn: async (values: { name: string; currency: string; monthlyBudget: number }) => {
       const response = await fetch("/api/users", {
         method: "PUT",
         headers: {
@@ -41,6 +41,7 @@ export default function UserProfile() {
           userId: session?.user?.userId,
           name: values.name,
           currency: values.currency,
+          monthlyBudget: values.monthlyBudget,
         }),
       });
 
@@ -70,6 +71,7 @@ export default function UserProfile() {
       form.setFieldsValue({
         name: userData.name,
         currency: userData.currency || "USD",
+        monthlyBudget: userData.monthlyBudget || 0,
       });
     }
   }, [userData, form]);
@@ -77,6 +79,7 @@ export default function UserProfile() {
   const handleUpdateProfile = async (values: {
     name: string;
     currency: string;
+    monthlyBudget: number;
   }) => {
     updateUser.mutate(values);
   };
@@ -138,6 +141,21 @@ export default function UserProfile() {
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Monthly Budget"
+              name="monthlyBudget"
+              rules={[
+                { required: true, message: "Please enter your monthly budget" },
+                { type: "number", min: 0, message: "Budget must be 0 or greater" },
+              ]}
+            >
+              <InputNumber
+                placeholder="Enter your monthly budget"
+                min={0}
+                style={{ width: "100%" }}
               />
             </Form.Item>
 
