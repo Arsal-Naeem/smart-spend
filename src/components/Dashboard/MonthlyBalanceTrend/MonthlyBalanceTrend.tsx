@@ -16,6 +16,7 @@ import { useMonthlyBalance } from '@/hooks/useApi';
 type MonthlyBalanceData = {
   month: string;
   balance: number;
+  expenditure: number;
 };
 
 const MonthlyBalanceTrend: React.FC = () => {
@@ -24,7 +25,7 @@ const MonthlyBalanceTrend: React.FC = () => {
 
   return (
     <Card
-      title="Monthly Balance Trend"
+      title="Monthly Saving Trend"
       bordered={false}
       loading={loading}
       style={{ height: "100%" }}
@@ -43,6 +44,10 @@ const MonthlyBalanceTrend: React.FC = () => {
             <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#6366F1" stopOpacity={0.2} />
               <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="expenditureGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#EF4444" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -74,7 +79,7 @@ const MonthlyBalanceTrend: React.FC = () => {
           <Legend iconType="circle" />
           <Line
             type="monotone"
-            dataKey="balance"
+            dataKey="saving"
             stroke="#cdf345"
             strokeWidth={3}
             dot={{ r: 4, fill: "#6366F1" }}
@@ -82,6 +87,17 @@ const MonthlyBalanceTrend: React.FC = () => {
             animationDuration={shouldAnimate ? 1500 : 0}
             animationBegin={0}
             fill="url(#balanceGradient)"
+          />
+          <Line
+            type="monotone"
+            dataKey="expenditure"
+            stroke="#EF4444"
+            strokeWidth={3}
+            dot={{ r: 4, fill: "#EF4444" }}
+            activeDot={{ r: 6, fill: "#EF4444" }}
+            animationDuration={shouldAnimate ? 1500 : 0}
+            animationBegin={0}
+            fill="url(#expenditureGradient)"
           />
         </LineChart>
       </ResponsiveContainer>

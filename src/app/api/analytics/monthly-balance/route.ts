@@ -21,8 +21,9 @@ export async function GET() {
       date: { $gte: sixMonthsAgo }
     });
 
-    // Group and calculate monthly balances
+    // Group and calculate monthly balances and expenditures
     const monthlyBalances = new Map();
+    const monthlyExpenditures = new Map();
 
     transactions.forEach(transaction => {
       const month = dayjs(transaction.date).format('MMM'); // Get month abbreviation
@@ -35,6 +36,14 @@ export async function GET() {
         month,
         (monthlyBalances.get(month) || 0) + amount
       );
+
+      // Track expenditures separately
+      if (transaction.type === 'expense') {
+        monthlyExpenditures.set(
+          month,
+          (monthlyExpenditures.get(month) || 0) + transaction.amount
+        );
+      }
     });
 
     // Create array of last 6 months in order
@@ -42,7 +51,8 @@ export async function GET() {
       const month = dayjs().subtract(i, 'month').format('MMM');
       return {
         month,
-        balance: Math.round((monthlyBalances.get(month) || 0) * 100) / 100
+        saving: Math.round((monthlyBalances.get(month) || 0) * 100) / 100,
+        expenditure: Math.round((monthlyExpenditures.get(month) || 0) * 100) / 100
       };
     }).reverse();
 
