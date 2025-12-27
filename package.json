@@ -14,7 +14,7 @@
     "antd": "^5.23.3",
     "dayjs": "^1.11.13",
     "mongoose": "^8.9.7",
-    "next": "15.1.6",
+    "next": "^15.1.9",
     "next-auth": "^5.0.0-beta.25",
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
