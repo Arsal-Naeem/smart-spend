@@ -1,9 +1,11 @@
 "use client";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import { Button, Form, Input, Select, Card, message, Divider } from "antd";
+import { Button, Form, Input, Select, Card, Divider } from "antd";
 import { useCurrency } from "@/hooks/useCurrency";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useUser } from "@/hooks/useApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CURRENCIES = [
   { value: "USD", label: "USD - US Dollar" },
@@ -21,43 +23,15 @@ const CURRENCIES = [
 export default function UserProfile() {
   const { data: session } = useSession();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-
   const { setCurrency } = useCurrency();
-  const [fetchingUser, setFetchingUser] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      fetchUserData();
-    }
-  }, [session]);
+  const { data: userData, isLoading: fetchingUser } = useUser(
+    session?.user?.userId || ""
+  );
 
-  const fetchUserData = async () => {
-    try {
-      setFetchingUser(true);
-      const response = await fetch(
-        `/api/users?userId=${session?.user?.userId}`
-      );
-      if (response.ok) {
-        const userData = await response.json();
-        form.setFieldsValue({
-          name: userData.name,
-          currency: userData.currency || "USD",
-        });
-      }
-    } catch (error) {
-      message.error("Failed to fetch user data");
-    } finally {
-      setFetchingUser(false);
-    }
-  };
-
-  const handleUpdateProfile = async (values: {
-    name: string;
-    currency: string;
-  }) => {
-    try {
-      setLoading(true);
+  const updateUser = useMutation({
+    mutationFn: async (values: { name: string; currency: string }) => {
       const response = await fetch("/api/users", {
         method: "PUT",
         headers: {
@@ -70,19 +44,41 @@ export default function UserProfile() {
         }),
       });
 
-      setCurrency(values.currency);
-      localStorage.setItem("userCurrency", values.currency);
-
-      if (response.ok) {
-        message.success("Profile updated successfully!");
-      } else {
-        message.error("Failed to update profile");
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
       }
-    } catch (error) {
-      message.error("An error occurred while updating profile");
-    } finally {
-      setLoading(false);
+
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      setCurrency(variables.currency);
+      localStorage.setItem("userCurrency", variables.currency);
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      import("antd").then(({ message }) => {
+        message.success("Profile updated successfully!");
+      });
+    },
+    onError: () => {
+      import("antd").then(({ message }) => {
+        message.error("Failed to update profile");
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (userData) {
+      form.setFieldsValue({
+        name: userData.name,
+        currency: userData.currency || "USD",
+      });
     }
+  }, [userData, form]);
+
+  const handleUpdateProfile = async (values: {
+    name: string;
+    currency: string;
+  }) => {
+    updateUser.mutate(values);
   };
 
   const handleSignOut = async () => {
@@ -149,7 +145,7 @@ export default function UserProfile() {
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={loading}
+                loading={updateUser.isPending}
                 size="large"
                 block
               >

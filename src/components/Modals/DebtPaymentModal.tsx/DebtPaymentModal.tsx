@@ -4,7 +4,6 @@ import {
   Card,
   Flex,
   Modal,
-  message,
   Form,
   Segmented,
   Input,
@@ -20,6 +19,11 @@ import EmptyState from "@/components/EmptyState/EmptyState";
 import { EditOutlined } from "@ant-design/icons";
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCurrencySymbol } from '@/utils/formatCurrency';
+import { 
+  useCategories, 
+  useCreateDebtPayment, 
+  useUpdateDebtPayment 
+} from '@/hooks/useApi';
 
 interface DebtData {
   _id: string;
@@ -56,16 +60,24 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
 }) => {
   const { currency } = useCurrency();
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [paymentType, setPaymentType] = useState<"return" | "add">("return");
   const [form] = Form.useForm();
-  const [categories, setCategories] = useState<
-    { value: string; label: string }[]
-  >([]);
   const [calculatedRemaining, setCalculatedRemaining] = useState(
     record.amountRemaining
   );
+
+  // Query hooks
+  const { data: categoriesData = [] } = useCategories();
+  const createDebtPayment = useCreateDebtPayment();
+  const updateDebtPayment = useUpdateDebtPayment();
+  
+  const loading = createDebtPayment.isPending || updateDebtPayment.isPending;
+  
+  const categories = categoriesData.map((cat: any) => ({
+    value: cat.category,
+    label: cat.category,
+  }));
 
   const handlePaymentClick = () => {
     if (!isEdit) {
@@ -85,108 +97,47 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   };
 
   const handleSubmit = async (values: any) => {
-    try {
-      setLoading(true);
-      const combinedDateTime =
-        values.date && values.time
-          ? dayjs(values.date)
-              .hour(dayjs(values.time).hour())
-              .minute(dayjs(values.time).minute())
-              .second(0)
-              .millisecond(0)
-              .utc()
-              .toISOString()
-          : null;
+    const combinedDateTime =
+      values.date && values.time
+        ? dayjs(values.date)
+            .hour(dayjs(values.time).hour())
+            .minute(dayjs(values.time).minute())
+            .second(0)
+            .millisecond(0)
+            .utc()
+            .toISOString()
+        : null;
 
-      const formattedValues = {
-        type: paymentType,
-        amount: values.amount,
-        date: combinedDateTime,
-        notes: values.notes,
-        category: values.category,
-        reason: values.reason,
-        title: values.title,
-      };
-
-      if (isEdit && transaction) {
-        const response = await fetch(`/api/debt-payments/${transaction._id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            debtId: record._id,
-            ...formattedValues,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to update payment");
-        }
-
-        message.success("Payment updated successfully");
-      } else {
-        const response = await fetch("/api/debt-payments", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            debtId: record._id,
-            ...formattedValues,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to create payment");
-        }
-
-        message.success(
-          `Payment ${
-            paymentType === "return" ? "returned" : "added"
-          } successfully`
-        );
-      }
-
-      setPaymentModalVisible(false);
-      form.resetFields();
-
-      if (onClose) {
-        onClose();
-      }
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      message.error("Failed to process payment");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/category");
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const data = await response.json();
-
-        const categoryOptions = data.map((cat: any) => ({
-          value: cat.category,
-          label: cat.category,
-        }));
-
-        setCategories(categoryOptions);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        message.error("Failed to load categories");
-      }
+    const formattedValues = {
+      type: paymentType,
+      amount: values.amount,
+      date: combinedDateTime,
+      notes: values.notes,
+      category: values.category,
+      reason: values.reason,
+      title: values.title,
     };
 
-    if (paymentModalVisible) {
-      fetchCategories();
+    if (isEdit && transaction) {
+      await updateDebtPayment.mutateAsync({
+        _id: transaction._id,
+        debtId: record._id,
+        ...formattedValues,
+      });
+    } else {
+      await createDebtPayment.mutateAsync({
+        debtId: record._id,
+        ...formattedValues,
+      });
     }
-  }, [paymentModalVisible]);
+
+    setPaymentModalVisible(false);
+    form.resetFields();
+
+    if (onClose) {
+      onClose();
+    }
+  };
 
   useEffect(() => {
     if (paymentType === "return") {

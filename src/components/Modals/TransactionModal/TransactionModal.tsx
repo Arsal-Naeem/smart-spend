@@ -20,6 +20,13 @@ import utc from "dayjs/plugin/utc";
 import EmptyState from "@/components/EmptyState/EmptyState";
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCurrencySymbol } from '@/utils/formatCurrency';
+import { 
+  useCategories, 
+  useCreateTransaction, 
+  useUpdateTransaction,
+  useCreateDebt,
+  useUpdateDebt
+} from '@/hooks/useApi';
 
 dayjs.extend(utc);
 
@@ -52,8 +59,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [transactionType, setTransactionType] = useState("expense");
   const [debtType, setDebtType] = useState<"given" | "taken">("taken");
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<CategoryOption[]>([]);
+  
+  // Query hooks
+  const { data: categoriesData = [] } = useCategories();
+  const createTransaction = useCreateTransaction();
+  const updateTransaction = useUpdateTransaction();
+  const createDebt = useCreateDebt();
+  const updateDebt = useUpdateDebt();
+  
+  const loading = createTransaction.isPending || updateTransaction.isPending || 
+                  createDebt.isPending || updateDebt.isPending;
+  
+  const categories: CategoryOption[] = categoriesData.map((cat: any) => ({
+    value: cat.category,
+    label: cat.category,
+  }));
 
   useEffect(() => {
     if (isEdit && record) {
@@ -84,31 +104,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     }
   }, [isEdit, record, form, isModalOpen]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/category");
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const data = await response.json();
 
-        const categoryOptions = data.map((cat: any) => ({
-          value: cat.category,
-          label: cat.category,
-        }));
-
-        setCategories(categoryOptions);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        message.error("Failed to load categories");
-      }
-    };
-
-    if (isModalOpen) {
-      fetchCategories();
-    }
-  }, [isModalOpen]);
 
   const showModal = () => {
     if (!isEdit) {
@@ -128,7 +124,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   };
 
   const handleSubmit = async (values: any) => {
-    setLoading(true);
     try {
       const combinedDateTime =
         values.date && values.time
@@ -147,39 +142,14 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           title: values.title,
           totalAmount: values.amount,
           debtType: values.debtType,
-          date: combinedDateTime,
+          date: combinedDateTime || "",
           notes: values.notes,
         };
 
         if (isEdit && record) {
-          const response = await fetch(`/api/debts?id=${record._id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(debtPayload),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to update debt");
-          }
-
-          message.success("Debt updated successfully");
+          await updateDebt.mutateAsync({ _id: record._id, ...debtPayload });
         } else {
-          // Create new debt
-          const response = await fetch("/api/debts", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(debtPayload),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to create debt");
-          }
-
-          message.success("Debt added successfully");
+          await createDebt.mutateAsync(debtPayload);
         }
       } else {
         // Handle regular income/expense transactions
@@ -187,43 +157,18 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           type: values.type,
           title: values.title,
           amount: values.amount,
-          date: combinedDateTime,
+          date: combinedDateTime || "",
           category: values.category,
           notes: values.notes,
         };
 
         if (isEdit && record) {
-          const response = await fetch(`/api/transactions`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              _id: record._id,
-              ...formattedValues,
-            }),
+          await updateTransaction.mutateAsync({
+            _id: record._id,
+            ...formattedValues,
           });
-
-          if (!response.ok) {
-            throw new Error("Failed to update transaction");
-          }
-
-          message.success("Transaction updated successfully");
         } else {
-          // Create new transaction
-          const response = await fetch("/api/transactions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formattedValues),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to create transaction");
-          }
-
-          message.success("Transaction added successfully");
+          await createTransaction.mutateAsync(formattedValues);
         }
       }
 
@@ -236,11 +181,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       }
     } catch (error) {
       console.error("Error creating/updating transaction:", error);
-      message.error(
-        error instanceof Error ? error.message : "An error occurred"
-      );
-    } finally {
-      setLoading(false);
     }
   };
 

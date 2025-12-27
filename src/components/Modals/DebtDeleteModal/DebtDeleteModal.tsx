@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Card, Flex, Modal, message } from "antd";
+import { Card, Flex, Modal } from "antd";
 import dayjs from "dayjs";
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCurrencySymbol } from '@/utils/formatCurrency';
+import { useDeleteDebt } from '@/hooks/useApi';
 
 interface DebtData {
   _id: string;
@@ -26,34 +27,18 @@ const DebtDeleteButton: React.FC<DebtDeleteModalProps> = ({
 }) => {
   const { currency } = useCurrency();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const deleteDebt = useDeleteDebt();
 
   const handleDelete = () => {
     setDeleteModalVisible(true);
   };
 
   const confirmDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/debts?id=${record._id}`, {
-        method: "DELETE",
-      });
+    await deleteDebt.mutateAsync(record._id);
+    setDeleteModalVisible(false);
 
-      if (!response.ok) {
-        throw new Error("Failed to delete debt");
-      }
-
-      message.success("Debt deleted successfully");
-      setDeleteModalVisible(false);
-
-      if (onClose) {
-        onClose();
-      }
-    } catch (error) {
-      console.error("Error deleting debt:", error);
-      message.error("Failed to delete debt");
-    } finally {
-      setLoading(false);
+    if (onClose) {
+      onClose();
     }
   };
 
@@ -70,7 +55,7 @@ const DebtDeleteButton: React.FC<DebtDeleteModalProps> = ({
         onCancel={() => setDeleteModalVisible(false)}
         okText="Delete"
         cancelText="Cancel"
-        okButtonProps={{ danger: true, loading: loading }}
+        okButtonProps={{ danger: true, loading: deleteDebt.isPending }}
         width={400}
         centered
       >

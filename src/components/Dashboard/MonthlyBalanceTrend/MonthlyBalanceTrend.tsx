@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   LineChart,
   Line,
@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useMonthlyBalance } from '@/hooks/useApi';
 
 type MonthlyBalanceData = {
   month: string;
@@ -18,36 +19,8 @@ type MonthlyBalanceData = {
 };
 
 const MonthlyBalanceTrend: React.FC = () => {
-  const [data, setData] = useState<MonthlyBalanceData[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { data = [], isLoading: loading } = useMonthlyBalance();
   const [shouldAnimate, setShouldAnimate] = useState(true);
-
-  useEffect(() => {
-    setShouldAnimate(false);
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/analytics/monthly-balance");
-        const data = await response.json();
-        setData(data);
-        setShouldAnimate(true);
-      } catch (error) {
-        console.error("Failed to fetch monthly balance data:", error);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 300);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      setLoading(true);
-      setShouldAnimate(false);
-    };
-  }, []);
 
   return (
     <Card

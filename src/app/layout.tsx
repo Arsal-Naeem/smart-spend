@@ -7,6 +7,7 @@ import "./globals.css";
 import { auth } from "@/auth";
 import Loader from "@/components/Loaders/FullPageLoader/Loader";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -92,10 +93,12 @@ export default async function RootLayout({
           }}
         >
           <SessionProvider session={session}>
-            <CurrencyProvider>
-              <Loader />
-              {children}
-            </CurrencyProvider>
+            <QueryProvider>
+              <CurrencyProvider>
+                <Loader />
+                {children}
+              </CurrencyProvider>
+            </QueryProvider>
           </SessionProvider>
         </ConfigProvider>
       </body>
