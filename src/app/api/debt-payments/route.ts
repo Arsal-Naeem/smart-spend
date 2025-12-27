@@ -53,14 +53,57 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create the transaction object
+    // Determine transaction type based on debt type and payment type
+    let transactionType: 'income' | 'expense' | null = null;
+    
+    if (debt.debtType === 'taken') {
+      // If I took debt (I owe money)
+      // - 'add' = I'm borrowing more money (expense for me as I am using this money to spend)
+      // - 'return' = I'm paying back (expense for me)
+      transactionType = 'expense';
+    } else {
+      // If I gave debt (someone owes me)
+      // - 'add' = I'm lending more money (expense for me)
+      // - 'return' = They're paying me back (income for me)
+      transactionType = type === 'add' ? 'expense' : 'income';
+    }
+
+    // Create a transaction in the Transaction collection
+    const transaction = await Transaction.create({
+      userId: session.user.userId,
+      title: title || `${debt.title} - ${type === 'return' ? 'debt payment' : 'debt addition'}`,
+      type: transactionType,
+      amount: amount,
+      date: date,
+      category: category,
+      notes: notes || reason
+    });
+
+    // Update category totals if it's an expense
+    if (transactionType === 'expense' && category) {
+      await Category.findOneAndUpdate(
+        { 
+          userId: session.user.userId,
+          categoryName: category 
+        },
+        { 
+          $inc: { 
+            totalSpend: amount,
+            transactionCount: 1
+          } 
+        }
+      );
+    }
+
+    // Create the transaction object for debt
     const transactionData = {
       type,
       amount,
       date,
       notes,
       reason,
-      category
+      category,
+      transactionId: transaction._id.toString()
     };
 
     // Update debt based on transaction type
@@ -95,34 +138,6 @@ export async function POST(request: Request) {
           amountRemaining: 0 // Ensure it doesn't go negative
         }
       });
-    }
-
-    // If the debt type is 'taken' and transaction type is 'add', 
-    // create an expense transaction to track spending
-    if (debt.debtType === 'taken' && type === 'add' && category) {
-      await Transaction.create({
-        userId: session.user.userId,
-        title: title || reason || `Debt expense - ${debt.title}`,
-        type: 'expense',
-        amount,
-        date,
-        category,
-        notes: notes || `Added to debt: ${debt.title}`
-      });
-
-      // Update category total spend
-      await Category.findOneAndUpdate(
-        { 
-          userId: session.user.userId,
-          categoryName: category 
-        },
-        { 
-          $inc: { 
-            totalSpend: amount,
-            transactionCount: 1
-          } 
-        }
-      );
     }
 
     return NextResponse.json({

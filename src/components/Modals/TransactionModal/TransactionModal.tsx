@@ -278,7 +278,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                   ? [
                       { label: "Expense", value: "expense" },
                       { label: "Income", value: "income" },
-                      // { label: "Debt", value: "debt" },
+                      { label: "Debt", value: "debt" },
                     ]
                   : [
                       { label: "Expense", value: "expense" },
@@ -364,23 +364,23 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             </Form.Item>
           </Space.Compact>
 
-          {transactionType === "expense" ||
-            (transactionType === "debt" && debtType === "taken" && (
-              <Form.Item
-                label="Category"
-                name="category"
-                rules={[{ required: true, message: "Please select category" }]}
-              >
-                <Select
-                  options={categories}
-                  placeholder="Select Category"
-                  loading={categories.length === 0}
-                  notFoundContent={
-                    <EmptyState description="No categories found" />
-                  }
-                />
-              </Form.Item>
-            ))}
+          {(transactionType === "expense" ||
+            (transactionType === "debt" && debtType === "taken")) && (
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true, message: "Please select category" }]}
+            >
+              <Select
+                options={categories}
+                placeholder="Select Category"
+                loading={categories.length === 0}
+                notFoundContent={
+                  <EmptyState description="No categories found" />
+                }
+              />
+            </Form.Item>
+          )}
 
           <Form.Item
             label={transactionType === "debt" ? "Reason" : "Notes"}

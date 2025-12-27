@@ -92,7 +92,15 @@ const DebtGrid: React.FC = () => {
             <LoadingSkeleton type="debt" quantity={3} />
           </>
         ) : debts.length === 0 ? (
-          <NoTransactions />
+          <NoTransactions
+            message={
+              filter === "Credit"
+                ? "You have no Credits pending"
+                : filter === "Debt"
+                ? "You have no Debts pending"
+                : "You have no Debt History"
+            }
+          />
         ) : (
           <>
             {debts.map((debt, index) => (
