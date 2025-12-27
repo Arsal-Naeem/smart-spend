@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import TransactionModal from "../Modals/TransactionModal/TransactionModal";
 import RecentTransactionCard from "../RecentTransaction/RecentTransactionCard";
+import NoTransactions from "../HelperComponents/NoTransactions";
+import LoadingSkeleton from "../HelperComponents/LoadingSkeleton";
 
 dayjs.extend(customParseFormat);
 
@@ -81,41 +83,6 @@ const TransactionsTable = () => {
     }));
   };
 
-  const LoadingSkeleton = () => (
-    <Card size="small" style={{ width: "100%" }} bordered={false}>
-      <Skeleton active paragraph={{ rows: 1 }} />
-    </Card>
-  );
-
-  const NoTransactions = () => (
-    <Card bordered={false} style={{ width: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-          padding: "32px 0",
-        }}
-      >
-        <img
-          src="/emptyWallet.png"
-          alt="Empty wallet"
-          style={{ width: "120px", height: "auto", opacity: 0.5 }}
-        />
-        <p
-          style={{
-            opacity: 0.5,
-            fontSize: "16px",
-            fontWeight: 500,
-          }}
-        >
-          No Recent Transactions
-        </p>
-      </div>
-    </Card>
-  );
-
   return (
     <div style={{ padding: 16 }}>
       <Segmented
@@ -129,11 +96,8 @@ const TransactionsTable = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {loading ? (
           <>
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-          </>
+          <LoadingSkeleton type="transaction" quantity={4} />
+        </>
         ) : transactions.length === 0 ? (
           <NoTransactions />
         ) : (

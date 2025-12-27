@@ -37,8 +37,8 @@ interface DebtCardProps {
   amountRemaining: number;
   debtType: "given" | "taken";
   date: string;
-  notes: string;
   transactions: DebtTransaction[];
+  onRefresh?: () => void;
 }
 
 const DebtCard: React.FC<DebtCardProps> = ({
@@ -48,9 +48,9 @@ const DebtCard: React.FC<DebtCardProps> = ({
   amountPaid,
   debtType,
   amountRemaining,
-  notes,
   date,
   transactions,
+  onRefresh,
 }) => {
   const progressPercentage = parseFloat(
     ((amountPaid / totalAmount) * 100).toFixed(1)
@@ -59,7 +59,7 @@ const DebtCard: React.FC<DebtCardProps> = ({
     <Card
       title={
         <div>
-          <Text strong>{`${title} (Rs.${totalAmount})`}</Text>
+          <Text strong>{`${title} (Rs.${amountRemaining})`}</Text>
 
           <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
             <ClockCircleOutlined style={{ fontSize: "10px", opacity: 0.7 }} />
@@ -94,9 +94,9 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       amountRemaining,
                       debtType,
                       date,
-                      notes,
                       transactions,
                     }}
+                    onRefresh={onRefresh}
                   />
                 ),
               },
@@ -116,8 +116,8 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       amountRemaining,
                       debtType,
                       date,
-                      notes,
                     }}
+                    onClose={onRefresh}
                   />
                 ),
               },
@@ -133,8 +133,8 @@ const DebtCard: React.FC<DebtCardProps> = ({
                       amountRemaining,
                       debtType,
                       date,
-                      notes,
                     }}
+                    onClose={onRefresh}
                   />
                 ),
               },

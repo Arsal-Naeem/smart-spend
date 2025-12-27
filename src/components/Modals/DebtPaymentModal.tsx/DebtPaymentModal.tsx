@@ -17,6 +17,7 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import EmptyState from "@/components/EmptyState/EmptyState";
+import { EditOutlined } from "@ant-design/icons";
 
 interface DebtData {
   _id: string;
@@ -26,16 +27,29 @@ interface DebtData {
   amountRemaining: number;
   debtType: "given" | "taken";
   date: string;
-  notes: string;
+}
+
+interface DebtTransaction {
+  _id: string;
+  type: "return" | "add";
+  amount: number;
+  date: string;
+  notes?: string;
+  reason?: string;
+  category?: string;
 }
 
 interface DebtPaymentModalProps {
   record: DebtData;
+  transaction?: DebtTransaction;
+  isEdit?: boolean;
   onClose?: () => void;
 }
 
 const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   record,
+  transaction,
+  isEdit = false,
   onClose,
 }) => {
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
@@ -51,11 +65,14 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   );
 
   const handlePaymentClick = () => {
-    const now = dayjs();
-    form.setFieldsValue({
-      date: now,
-      time: now,
-    });
+    if (!isEdit) {
+      const now = dayjs();
+      console.log(now);
+      form.setFieldsValue({
+        date: now,
+        time: now,
+      });
+    }
     setPaymentModalVisible(true);
   };
 
@@ -70,8 +87,8 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
       const combinedDateTime =
         values.date && values.time
           ? dayjs(values.date)
-              .hour(values.time.hour())
-              .minute(values.time.minute())
+              .hour(dayjs(values.time).hour())
+              .minute(dayjs(values.time).minute())
               .second(0)
               .millisecond(0)
               .utc()
@@ -84,16 +101,50 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
         date: combinedDateTime,
         notes: values.notes,
         category: values.category,
+        reason: values.reason,
+        title: values.title,
       };
 
-      // API implementation will go here
-      console.log(formattedValues);
+      if (isEdit && transaction) {
+        const response = await fetch(`/api/debt-payments/${transaction._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            debtId: record._id,
+            ...formattedValues,
+          }),
+        });
 
-      message.success(
-        `Payment ${
-          paymentType === "return" ? "returned" : "added"
-        } successfully`
-      );
+        if (!response.ok) {
+          throw new Error("Failed to update payment");
+        }
+
+        message.success("Payment updated successfully");
+      } else {
+        const response = await fetch("/api/debt-payments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            debtId: record._id,
+            ...formattedValues,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create payment");
+        }
+
+        message.success(
+          `Payment ${
+            paymentType === "return" ? "returned" : "added"
+          } successfully`
+        );
+      }
+
       setPaymentModalVisible(false);
       form.resetFields();
 
@@ -135,24 +186,54 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   }, [paymentModalVisible]);
 
   useEffect(() => {
-    if (amount > record.amountRemaining) {
-      setCalculatedRemaining(0);
+    if (paymentType === "return") {
+      // Subtracting payment from debt
+      if (amount > record.amountRemaining) {
+        setCalculatedRemaining(0);
+      } else {
+        setCalculatedRemaining(record.amountRemaining - amount);
+      }
     } else {
-      setCalculatedRemaining(record.amountRemaining - amount);
+      // Adding to debt
+      setCalculatedRemaining(record.amountRemaining + amount);
     }
-  }, [form, amount, record.amountRemaining]);
+  }, [form, amount, record.amountRemaining, paymentType]);
+
+  useEffect(() => {
+    if (isEdit && transaction) {
+      const datetime = dayjs(transaction.date);
+      form.setFieldsValue({
+        paymentType: transaction.type,
+        amount: transaction.amount,
+        date: datetime,
+        time: datetime,
+        category: transaction.category,
+        reason: transaction.reason,
+        notes: transaction.notes,
+      });
+      setPaymentType(transaction.type);
+      setAmount(transaction.amount);
+    }
+  }, [isEdit, transaction, form]);
 
   return (
     <>
-      <p
-        style={{ width: "100%", textAlign: "center" }}
-        onClick={handlePaymentClick}
-      >
-        Pay
-      </p>
+      {isEdit ? (
+        <EditOutlined
+          onClick={handlePaymentClick}
+          style={{ cursor: "pointer" }}
+        />
+      ) : (
+        <p
+          style={{ width: "100%", textAlign: "center" }}
+          onClick={handlePaymentClick}
+        >
+          Pay
+        </p>
+      )}
 
       <Modal
-        title="Debt Payment"
+        title={isEdit ? "Edit Payment" : "Debt Payment"}
         open={paymentModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -256,6 +337,10 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
             </Form.Item>
           )}
 
+          <Form.Item label="Reason" name="reason" rules={[{ required: false }]}>
+            <Input.TextArea placeholder="Enter Reason" />
+          </Form.Item>
+
           <div style={{ margin: "1rem 0 1.5rem 0" }}>
             <Card>
               <Flex align="center" justify="space-between">
@@ -271,7 +356,11 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit" loading={loading}>
-                {paymentType === "return" ? "Return Payment" : "Add to Debt"}
+                {isEdit
+                  ? "Update"
+                  : paymentType === "return"
+                  ? "Return Payment"
+                  : "Add to Debt"}
               </Button>
             </Space>
           </Form.Item>

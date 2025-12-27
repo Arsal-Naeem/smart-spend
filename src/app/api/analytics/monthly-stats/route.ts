@@ -16,10 +16,14 @@ export async function GET() {
 
         const startOfMonth = dayjs().startOf("month").toDate().toISOString();
 
-        // Get all transactions and categories
-        const transactions = await Transaction.find({
+        // Get monthly transactions and all transactions, plus categories
+        const monthlyTransactions = await Transaction.find({
             userId: session.user.userId,
             date: { $gte: startOfMonth },
+        });
+
+        const allTransactions = await Transaction.find({
+            userId: session.user.userId,
         });
 
         const categories = await Category.find({
@@ -27,11 +31,11 @@ export async function GET() {
         });
 
         // Calculate monthly stats
-        const monthlyIncome = transactions
+        const monthlyIncome = monthlyTransactions
             .filter(t => t.type === 'income')
             .reduce((sum, t) => sum + t.amount, 0);
 
-        const monthlyExpenses = transactions
+        const monthlyExpenses = monthlyTransactions
             .filter(t => t.type === 'expense')
             .reduce((sum, t) => sum + t.amount, 0);
 
@@ -43,8 +47,16 @@ export async function GET() {
             ? (monthlyExpenses / totalBudget) * 100 
             : 0;
 
-        // Calculate current balance (income - expenses)
-        const currentBalance = monthlyIncome - monthlyExpenses;
+        // Calculate current balance as net amount of all time (income - expenses)
+        const allTimeIncome = allTransactions
+            .filter(t => t.type === 'income')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const allTimeExpenses = allTransactions
+            .filter(t => t.type === 'expense')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const currentBalance = allTimeIncome - allTimeExpenses;
 
         const stats = {
             currentBalance,

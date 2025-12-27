@@ -57,25 +57,25 @@ const Navbar = () => {
           Transactions
         </Link>
         <Link
+          href="/debts"
+          className={pathname === "/debts" ? styles.active : ""}
+        >
+          Debts
+        </Link>
+        <Link
           href="/categories"
           className={pathname === "/categories" ? styles.active : ""}
         >
           Categories
         </Link>
-        {/* <Link
-          href="/debts"
-          className={pathname === "/debts" ? styles.active : ""}
-        >
-          Debts
-        </Link> */}
         <Tooltip title="Feature Coming Soon" placement="bottom">
           <span className={styles.disabledLink}>Recurring</span>
         </Tooltip>
         <Link
-          href="/user-profile"
-          className={pathname === "/user-profile" ? styles.active : ""}
+          href="/settings"
+          className={pathname === "/settings" ? styles.active : ""}
         >
-          User Profile
+          Settings
         </Link>
       </div>
     </nav>

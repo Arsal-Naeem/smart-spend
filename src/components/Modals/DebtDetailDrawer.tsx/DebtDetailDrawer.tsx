@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { pdf } from "@react-pdf/renderer";
 import DebtReport from "@/components/PDFTemplates/DebtReport";
+import DebtPaymentButton from "../DebtPaymentModal.tsx/DebtPaymentModal";
 
 const { Text, Title } = Typography;
 
@@ -34,12 +35,12 @@ interface DebtDetailProps {
     amountRemaining: number;
     debtType: "given" | "taken";
     date: string;
-    notes: string;
     transactions: DebtTransaction[];
   };
+  onRefresh?: () => void;
 }
 
-const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
+const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record, onRefresh }) => {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
@@ -193,6 +194,12 @@ const DebtDetailDrawer: React.FC<DebtDetailProps> = ({ record }) => {
                     <div>
                       <Text strong>
                         {getTransactionDescription(transaction, record, session?.user?.name)}
+                        <DebtPaymentButton
+                          record={record}
+                          transaction={transaction}
+                          isEdit={true}
+                          onClose={onRefresh}
+                        />
                       </Text>
                       <br />
                       <p style={{ fontSize: "12px", opacity: 0.75 }}>

@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DebtCard from "../DebtCard/DebtCard";
-import { Card, Segmented, Skeleton } from "antd";
+import { Segmented, message } from "antd";
+import LoadingSkeleton from "../HelperComponents/LoadingSkeleton";
+import NoTransactions from "../HelperComponents/NoTransactions";
 
 interface DebtTransaction {
   _id: string;
@@ -20,164 +22,50 @@ interface Debt {
   amountRemaining: number;
   debtType: "given" | "taken";
   date: string;
-  notes: string;
   transactions: DebtTransaction[];
 }
 
-const debts: Debt[] = [
-  {
-    _id: "1",
-    title: "Wasay Baboo",
-    totalAmount: 840,
-    amountPaid: 150,
-    amountRemaining: 690,
-    date: "2025-02-27T20:47:00.000Z",
-    debtType: "given",
-    notes: "Monthly payment of $500",
-    transactions: [
-      {
-        _id: "t1",
-        type: "add",
-        amount: 80,
-        date: "2025-03-03T07:00:00.000Z",
-        reason: "chai",
-      },
-      {
-        _id: "t1",
-        type: "add",
-        amount: 200,
-        date: "2025-03-02T07:00:00.000Z",
-        reason: "T2K Academy",
-      },
-      {
-        _id: "t1",
-        type: "return",
-        amount: 150,
-        date: "2025-03-01T07:00:00.000Z",
-        reason: "Gaming Zone",
-      },
-      {
-        _id: "t1",
-        type: "add",
-        amount: 560,
-        date: "2025-02-26T21:00:00.000Z",
-        reason: "Pizza/Burger",
-      },
-    ],
-  },
-  {
-    _id: "2",
-    title: "Hasnain Ziaidi",
-    totalAmount: 1060,
-    amountPaid: 100,
-    amountRemaining: 960,
-    date: "2025-02-27T20:47:00.000Z",
-    debtType: "given",
-    notes: "Monthly payment of $500",
-    transactions: [
-      {
-        _id: "t1",
-        type: "add",
-        amount: 100,
-        date: "2025-02-28T12:00:00.000Z",
-      },
-      {
-        _id: "t2",
-        type: "add",
-        amount: 560,
-        date: "2025-03-28T12:00:00.000Z",
-      },
-      {
-        _id: "t3",
-        type: "add",
-        amount: 400,
-        date: "2025-03-01T14:20:00.000Z",
-      },
-      {
-        _id: "t3",
-        type: "return",
-        amount: 100,
-        date: "2025-03-10T14:20:00.000Z",
-      },
-    ],
-  },
-  {
-    _id: "3",
-    title: "Syed Shayan",
-    totalAmount: 4160,
-    amountPaid: 0,
-    amountRemaining: 14160,
-    date: "2025-02-27T20:47:00.000Z",
-    debtType: "given",
-    notes: "Monthly payment of $500",
-    transactions: [],
-  },
-  {
-    _id: "4",
-    title: "Abbu",
-    totalAmount: 5000,
-    amountPaid: 0,
-    amountRemaining: 5000,
-    date: "2025-02-27T20:47:00.000Z",
-    debtType: "given",
-    notes: "Monthly payment of $500",
-    transactions: [],
-  },
-  {
-    _id: "5",
-    title: "Uzair Bhai",
-    totalAmount: 1500,
-    amountPaid: 0,
-    amountRemaining: 1500,
-    date: "2025-02-27T20:47:00.000Z",
-    debtType: "given",
-    notes: "Monthly payment of $500",
-    transactions: [],
-  },
-  {
-    _id: "6",
-    title: "Shahryar Khan",
-    totalAmount: 5000,
-    amountPaid: 0,
-    amountRemaining: 5000,
-    date: "2025-03-01T20:47:00.000Z",
-    debtType: "taken",
-    notes: "Monthly payment of $500",
-    transactions: [
-      {
-        _id: "t3",
-        type: "add",
-        amount: 260,
-        date: "2025-03-01T14:20:00.000Z",
-      },
-      {
-        _id: "t3",
-        type: "add",
-        amount: 280,
-        date: "2025-03-10T14:20:00.000Z",
-      },
-    ],
-  },
-];
-
 const DebtGrid: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [debts, setDebts] = useState<Debt[]>([]);
   const [filter, setFilter] = useState<"Debt" | "Credit" | "History">("Debt");
 
-  const handleFilterChange = (value: "Debt" | "Credit" | "History") => {
-    setLoading(true);
-    setFilter(value);
+  const fetchDebts = async () => {
+    try {
+      setLoading(true);
+      let url = "/api/debts?";
 
-    setTimeout(() => {
+      if (filter === "Debt") {
+        url += "debtType=taken&status=active";
+      } else if (filter === "Credit") {
+        url += "debtType=given&status=active";
+      } else if (filter === "History") {
+        url += "status=completed";
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch debts");
+      }
+
+      const data = await response.json();
+      setDebts(data.debts);
+    } catch (error) {
+      console.error("Error fetching debts:", error);
+      message.error("Failed to load debts");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
-  const LoadingSkeleton = () => (
-    <Card style={{ width: 400 }} bordered={false}>
-      <Skeleton active paragraph={{ rows: 5 }} />
-    </Card>
-  );
+  useEffect(() => {
+    fetchDebts();
+  }, [filter]);
+
+  const handleFilterChange = (value: "Debt" | "Credit" | "History") => {
+    setFilter(value);
+  };
+
   return (
     <>
       <Segmented
@@ -201,15 +89,15 @@ const DebtGrid: React.FC = () => {
       >
         {loading ? (
           <>
-            <LoadingSkeleton />
-            <LoadingSkeleton />
-            <LoadingSkeleton />
+            <LoadingSkeleton type="debt" quantity={3} />
           </>
+        ) : debts.length === 0 ? (
+          <NoTransactions />
         ) : (
           <>
             {debts.map((debt, index) => (
               <DebtCard
-                key={index}
+                key={debt._id}
                 _id={debt._id}
                 title={debt.title}
                 totalAmount={debt.totalAmount}
@@ -217,8 +105,8 @@ const DebtGrid: React.FC = () => {
                 amountRemaining={debt.amountRemaining}
                 date={debt.date}
                 debtType={debt.debtType}
-                notes={debt.notes}
                 transactions={debt.transactions}
+                onRefresh={fetchDebts}
               />
             ))}
           </>

@@ -1,26 +1,42 @@
 "use client";
-import { Card, Col, Divider, Flex, Row, Skeleton } from "antd";
+import { Card, Col, Divider, Flex, Row, Skeleton, message } from "antd";
 import { useEffect, useState } from "react";
 
 interface DebtSummary {
   outstandingDebt: number;
   outstandingCredit: number;
+  takenCount: number;
+  givenCount: number;
 }
 
-const debtSummary: DebtSummary = {
-  outstandingDebt: 0,
-  outstandingCredit: 21780,
-};
-
 const DebtSummaryCard = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [debtSummary, setDebtSummary] = useState<DebtSummary>({
+    outstandingDebt: 0,
+    outstandingCredit: 0,
+    takenCount: 0,
+    givenCount: 0,
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const fetchDebtSummary = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/debt-payments");
+        if (!response.ok) {
+          throw new Error("Failed to fetch debt summary");
+        }
+        const data = await response.json();
+        setDebtSummary(data);
+      } catch (error) {
+        console.error("Error fetching debt summary:", error);
+        message.error("Failed to load debt summary");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    fetchDebtSummary();
   }, []);
 
   const LoadingSkeleton = () => (
