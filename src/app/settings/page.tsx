@@ -147,6 +147,7 @@ export default function UserProfile() {
             <Form.Item
               label="Monthly Budget"
               name="monthlyBudget"
+              tooltip="Set to 0 if you don't want to set budget"
               rules={[
                 { required: true, message: "Please enter your monthly budget" },
                 { type: "number", min: 0, message: "Budget must be 0 or greater" },
