@@ -108,6 +108,7 @@ export default function UserProfile() {
         <Card
           style={{ width: "100%", maxWidth: "600px" }}
           loading={fetchingUser}
+          bordered={false}
         >
           <h3 style={{ marginBottom: "24px" }}>Profile Settings</h3>
           <Form
