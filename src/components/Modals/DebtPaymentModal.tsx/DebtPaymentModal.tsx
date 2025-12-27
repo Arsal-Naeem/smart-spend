@@ -18,6 +18,8 @@ import {
 import dayjs from "dayjs";
 import EmptyState from "@/components/EmptyState/EmptyState";
 import { EditOutlined } from "@ant-design/icons";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface DebtData {
   _id: string;
@@ -52,6 +54,7 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
   isEdit = false,
   onClose,
 }) => {
+  const { currency } = useCurrency();
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -283,7 +286,7 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
             ]}
           >
             <InputNumber
-              prefix="Rs."
+              prefix={getCurrencySymbol(currency)}
               style={{ width: "100%" }}
               min={0}
               onChange={(value) => setAmount(value ?? 0)}
@@ -345,7 +348,7 @@ const DebtPaymentButton: React.FC<DebtPaymentModalProps> = ({
             <Card>
               <Flex align="center" justify="space-between">
                 <p>Remaining Amount</p>
-                <h3>Rs. {calculatedRemaining}</h3>
+                <h3>{getCurrencySymbol(currency)} {calculatedRemaining}</h3>
               </Flex>
             </Card>
           </div>

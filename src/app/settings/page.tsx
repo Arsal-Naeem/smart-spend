@@ -1,15 +1,7 @@
 "use client";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  Card,
-  message,
-  Space,
-  Divider,
-} from "antd";
+import { Button, Form, Input, Select, Card, message, Divider } from "antd";
+import { useCurrency } from "@/hooks/useCurrency";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -30,6 +22,8 @@ export default function UserProfile() {
   const { data: session } = useSession();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  const { setCurrency } = useCurrency();
   const [fetchingUser, setFetchingUser] = useState(true);
 
   useEffect(() => {
@@ -75,6 +69,9 @@ export default function UserProfile() {
           currency: values.currency,
         }),
       });
+
+      setCurrency(values.currency);
+      localStorage.setItem("userCurrency", values.currency);
 
       if (response.ok) {
         message.success("Profile updated successfully!");

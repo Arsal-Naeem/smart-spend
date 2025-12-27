@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import EmptyState from "@/components/EmptyState/EmptyState";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 dayjs.extend(utc);
 
@@ -45,6 +47,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   record,
   onClose,
 }) => {
+  const { currency } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("expense");
   const [debtType, setDebtType] = useState<"given" | "taken">("taken");
@@ -338,7 +341,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
+            <InputNumber prefix={getCurrencySymbol(currency)} style={{ width: "100%" }} min={0} />
           </Form.Item>
 
           <Space.Compact block style={{ width: "100%" }}>

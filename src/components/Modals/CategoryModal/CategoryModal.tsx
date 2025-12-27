@@ -11,6 +11,8 @@ import {
   message,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface CategoryModalProps {
   isEdit?: boolean;
@@ -30,6 +32,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   onClick,
   onSuccess,
 }) => {
+  const { currency } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -156,7 +159,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             initialValue={0}
             rules={[{ required: true, message: "Please enter amount" }]}
           >
-            <InputNumber prefix="Rs." style={{ width: "100%" }} min={0} />
+            <InputNumber prefix={getCurrencySymbol(currency)} style={{ width: "100%" }} min={0} />
           </Form.Item>
           <Form.Item
             label="Color"

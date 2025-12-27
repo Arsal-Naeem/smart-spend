@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Modal, message } from "antd"; // Add message from antd
 import dayjs from "dayjs";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface TransactionData {
   _id: string;
@@ -22,6 +24,7 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
   record,
   onClose,
 }) => {
+  const { currency } = useCurrency();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +80,7 @@ const DeleteTransactionButton: React.FC<DeleteTransactionButtonProps> = ({
             <strong>Title:</strong> {record.title}
           </p>
           <p>
-            <strong>Amount:</strong> Rs.{record.amount.toFixed(2)}
+            <strong>Amount:</strong> {getCurrencySymbol(currency)}{record.amount.toFixed(2)}
           </p>
           <p>
             <strong>Date:</strong>{" "}

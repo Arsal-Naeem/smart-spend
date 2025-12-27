@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Card, Flex, Modal, message } from "antd";
 import dayjs from "dayjs";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface DebtData {
   _id: string;
@@ -22,6 +24,7 @@ const DebtDeleteButton: React.FC<DebtDeleteModalProps> = ({
   record,
   onClose,
 }) => {
+  const { currency } = useCurrency();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -87,7 +90,7 @@ const DebtDeleteButton: React.FC<DebtDeleteModalProps> = ({
                   </p>
                 </div>
               </Flex>
-              <div>Rs.{record.totalAmount}</div>
+              <div>{getCurrencySymbol(currency)}{record.totalAmount}</div>
             </Flex>
           </Card>
         </div>

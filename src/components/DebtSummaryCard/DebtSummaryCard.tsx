@@ -1,6 +1,8 @@
 "use client";
 import { Card, Col, Divider, Flex, Row, Skeleton, message } from "antd";
 import { useEffect, useState } from "react";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface DebtSummary {
   outstandingDebt: number;
@@ -10,6 +12,7 @@ interface DebtSummary {
 }
 
 const DebtSummaryCard = () => {
+  const { currency } = useCurrency();
   const [loading, setLoading] = useState(true);
   const [debtSummary, setDebtSummary] = useState<DebtSummary>({
     outstandingDebt: 0,
@@ -55,7 +58,7 @@ const DebtSummaryCard = () => {
             <Col span={11}>
               <Flex vertical align="center" justify="center" gap={8}>
                 <p style={{ opacity: 0.75 }}>Outstanding Debt</p>
-                <h3>Rs. {debtSummary.outstandingDebt}</h3>
+                <h3>{getCurrencySymbol(currency)} {debtSummary.outstandingDebt}</h3>
               </Flex>
             </Col>
             <Col span={2}>
@@ -71,7 +74,7 @@ const DebtSummaryCard = () => {
             <Col span={11}>
               <Flex vertical align="center" justify="center" gap={8}>
                 <p style={{ opacity: 0.75 }}>Outstanding Credit</p>
-                <h3>Rs. {debtSummary.outstandingCredit}</h3>
+                <h3>{getCurrencySymbol(currency)} {debtSummary.outstandingCredit}</h3>
               </Flex>
             </Col>
           </Row>

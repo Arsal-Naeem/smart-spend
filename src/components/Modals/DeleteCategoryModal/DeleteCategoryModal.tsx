@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Button, Modal, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface CategoryData {
   _id: string;
@@ -19,6 +21,7 @@ const DeleteCategoryButton: React.FC<DeleteCategoryButtonProps> = ({
   category,
   onClose,
 }) => {
+  const { currency } = useCurrency();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -78,7 +81,7 @@ const DeleteCategoryButton: React.FC<DeleteCategoryButtonProps> = ({
             <strong>Category:</strong> {category.categoryName}
           </p>
           <p>
-            <strong>Budget:</strong> Rs.{category.budget.toFixed(2)}
+            <strong>Budget:</strong> {getCurrencySymbol(currency)}{category.budget.toFixed(2)}
           </p>
         </div>
       </Modal>

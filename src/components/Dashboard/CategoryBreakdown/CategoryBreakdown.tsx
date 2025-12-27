@@ -10,6 +10,8 @@ import {
   Sector,
 } from "recharts";
 import { useState, useCallback, useEffect } from "react";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface CategoryData {
   category: string;
@@ -18,6 +20,7 @@ interface CategoryData {
 }
 
 const CategoryBreakdown: React.FC = () => {
+  const { currency } = useCurrency();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<CategoryData[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | undefined>();
@@ -81,7 +84,7 @@ const CategoryBreakdown: React.FC = () => {
           }}
         >
           <p style={{ margin: 0, fontWeight: "bold" }}>{payload[0].name}</p>
-          <p style={{ margin: 0 }}>Rs.{payload[0].value.toFixed(2)}</p>
+          <p style={{ margin: 0 }}>{getCurrencySymbol(currency)}{payload[0].value.toFixed(2)}</p>
           <p style={{ margin: 0, opacity: 0.7 }}>
             {((payload[0].value / payload[0].payload.total) * 100).toFixed(1)}%
           </p>

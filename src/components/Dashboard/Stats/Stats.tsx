@@ -8,6 +8,8 @@ import {
 } from "@ant-design/icons";
 import CountUp from "react-countup";
 import { useEffect, useState } from "react";
+import { useCurrency } from '@/hooks/useCurrency';
+import { getCurrencySymbol } from '@/utils/formatCurrency';
 
 interface StatsData {
   currentBalance: number;
@@ -17,6 +19,7 @@ interface StatsData {
 }
 
 const Stats: React.FC = () => {
+  const { currency } = useCurrency();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<StatsData>({
     currentBalance: 0,
@@ -62,7 +65,7 @@ const Stats: React.FC = () => {
                 Current Balance
               </div>
               <div style={{ color: "#cdf345", fontSize: "24px" }}>
-                <WalletOutlined style={{ marginRight: "5px" }} /> Rs.
+                <WalletOutlined style={{ marginRight: "5px" }} /> {getCurrencySymbol(currency)}
                 <CountUp
                   end={stats.currentBalance}
                   separator=","
@@ -86,7 +89,7 @@ const Stats: React.FC = () => {
                 Income
               </div>
               <div style={{ color: "#45bcf3", fontSize: "24px" }}>
-                <RiseOutlined style={{ marginRight: "5px" }} /> Rs.
+                <RiseOutlined style={{ marginRight: "5px" }} /> {getCurrencySymbol(currency)}
                 <CountUp end={stats.monthlyIncome} separator="," duration={1} />
               </div>
             </div>
@@ -106,7 +109,7 @@ const Stats: React.FC = () => {
                 Expenses
               </div>
               <div style={{ color: "#f34545", fontSize: "24px" }}>
-                <FallOutlined style={{ marginRight: "5px" }} /> Rs.
+                <FallOutlined style={{ marginRight: "5px" }} /> {getCurrencySymbol(currency)}
                 <CountUp
                   end={stats.monthlyExpenses}
                   separator=","
